@@ -109,10 +109,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   Widget _goodsImages() {
     final List<String> goodsImagePaths = [
-      'assets/goods/image1.avif',
+      // 'assets/goods/image1.avif',
       'assets/goods/image2.jpg',
       'assets/goods/image3.webp',
-      'assets/goods/image4.avif',
+      'assets/goods/image2.jpg',
+      'assets/goods/image3.webp',
+
+      // 'assets/goods/image4.avif',
     ];
 
     return SizedBox(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'dummy_api_data/food/provider/food_provider.dart';
+import 'features/auth/screens/splash_first_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/theme_provider.dart';
 
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: AppLocalizations.supportedLocales,
           themeMode: themeProvider.themeMode,  // Dynamic theme mode
-          home: const OnboardingRideScreen(), // <-- add your first screen here
+          home: const SplashScreen(), // <-- add your first screen here
         );
       },
     );

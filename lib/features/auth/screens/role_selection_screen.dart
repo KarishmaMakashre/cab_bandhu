@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Intercity_input/driver_dashboard_screen.dart';
-
 class PartnerTypeBottomSheet extends StatefulWidget {
   const PartnerTypeBottomSheet({super.key});
 
@@ -135,7 +133,7 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const DriverDashboardScreen(),
+                          builder: (_) => const RegistrationScreen(),
                         ),
                       );
                     },

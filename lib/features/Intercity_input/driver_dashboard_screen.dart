@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../porter_partner/screens/portner_verification.dart';
 import '../rider/custom_app_bar.dart';
 import '../settings/screens/profile_screen.dart';
 import 'live_trip_map_screen.dart';
@@ -134,7 +135,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const TripMapPreviewScreen()),
+                                builder: (_) => const PickupVerificationMapScreen()),
                           );
                         },
                       ),
