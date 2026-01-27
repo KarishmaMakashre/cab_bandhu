@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../settings/screens/notification_screen.dart';
 import 'driver_menu_screen.dart';
-
-/// ================= CUSTOM HOME APP BAR =================
 
 class CustomHomeAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -19,11 +18,20 @@ class CustomHomeAppBar extends StatelessWidget
       child: Container(
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: const BoxDecoration(color: Colors.black),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            )
+          ],
+        ),
         child: Row(
           children: [
 
-            /// ☰ MENU + WELCOME (LEFT)
+            /// 👤 PROFILE + LOCATION
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -35,15 +43,13 @@ class CustomHomeAppBar extends StatelessWidget
               },
               child: Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 20,
-                    backgroundColor: Colors.grey.shade800,
-                    backgroundImage: const NetworkImage(
-                      "https://images.unsplash.com/photo-1619895862022-09114b41f16f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
+                    backgroundImage: NetworkImage(
+                      "https://images.unsplash.com/photo-1619895862022-09114b41f16f",
                     ),
                   ),
-                  const SizedBox(width: 12),
-
+                  const SizedBox(width: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,16 +58,15 @@ class CustomHomeAppBar extends StatelessWidget
                         "Welcome 👋",
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white70,
+                          color: Colors.black54,
                         ),
                       ),
-                      SizedBox(height: 2),
                       Text(
-                        "Ratanlok Colony,Indore",
+                        "Ratanlok Colony, Indore",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: Colors.black87,
                         ),
                       ),
                     ],
@@ -70,22 +75,25 @@ class CustomHomeAppBar extends StatelessWidget
               ),
             ),
 
-            /// SPACE BETWEEN LEFT & RIGHT
             const Spacer(),
 
-            /// 🔄 DUTY SWITCH (RIGHT)
+            /// 🔄 WHITE THEME DUTY SWITCH
             DutySwitch(
               initialValue: true,
               onChanged: onDutyChanged,
             ),
 
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
 
             /// 🔔 NOTIFICATION
             Stack(
-              clipBehavior: Clip.none,
               children: [
                 IconButton(
+                  icon: const Icon(
+                    Icons.notifications_none_rounded,
+                    size: 30,
+                    color: Colors.black54,
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -94,31 +102,16 @@ class CustomHomeAppBar extends StatelessWidget
                       ),
                     );
                   },
-                  icon: const Icon(
-                    Icons.notifications_active_rounded,
-                    size: 32,
-                    color: Colors.white,
-                  ),
                 ),
                 Positioned(
-                  right: -2,
-                  top: -2,
+                  right: 6,
+                  top: 6,
                   child: Container(
-                    height: 18,
-                    width: 18,
+                    height: 10,
+                    width: 10,
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "1",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                   ),
                 ),
@@ -130,8 +123,6 @@ class CustomHomeAppBar extends StatelessWidget
     );
   }
 }
-
-/// ================= DUTY SWITCH =================
 
 class DutySwitch extends StatefulWidget {
   final ValueChanged<bool>? onChanged;
@@ -165,53 +156,56 @@ class _DutySwitchState extends State<DutySwitch> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 38,
+        height: 36,
         width: 80,
         padding: const EdgeInsets.symmetric(horizontal: 6),
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.grey.shade700),
+          border: Border.all(color: Colors.grey.shade300),
         ),
         child: Stack(
+          alignment: Alignment.center,
           children: [
 
-            /// ✅ ON / OFF TEXT (ALWAYS VISIBLE)
+            /// ON / OFF TEXT
             AnimatedAlign(
+              duration: const Duration(milliseconds: 250),
               alignment: isOnDuty
                   ? Alignment.centerLeft
                   : Alignment.centerRight,
-              duration: const Duration(milliseconds: 250),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   isOnDuty ? "ON" : "OFF",
                   style: TextStyle(
-                    color: isOnDuty ? Colors.greenAccent : Colors.redAccent,
-                    fontWeight: FontWeight.w700,
                     fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isOnDuty
+                        ? Colors.green
+                        : Colors.redAccent,
                   ),
                 ),
               ),
             ),
 
-            /// ⚪ SLIDING THUMB
+            /// SLIDER THUMB
             AnimatedAlign(
+              duration: const Duration(milliseconds: 250),
               alignment: isOnDuty
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
-              duration: const Duration(milliseconds: 250),
               child: Container(
                 height: 24,
                 width: 24,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12,
+                      color: Colors.black.withOpacity(0.15),
                       blurRadius: 4,
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),

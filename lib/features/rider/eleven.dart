@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/twelve.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,7 +9,8 @@ class TripHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: Colors.grey.shade100,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -16,65 +18,74 @@ class TripHistoryScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              /// 🔙 Back + Title
+              /// 🔙 BACK + TITLE
               Row(
-                children: const [
-                  Icon(Icons.arrow_back, color: Colors.white), // WHITE ICON
-                  SizedBox(width: 12),
-                  Text(
+                children: [
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.arrow_back, color: Colors.black),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
                     "Trip History",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white, // WHITE TEXT
+                      color: Colors.black,
                     ),
                   ),
                 ],
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              ).animate().fadeIn().slideX(begin: -0.1),
 
               const SizedBox(height: 16),
 
-              /// 🧾 Section Title
+              /// 🧾 SECTION TITLE
               const Text(
                 "Recent Trips",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white, // WHITE TEXT
+                  color: Colors.black87,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              ).animate().fadeIn().slideX(begin: -0.1),
 
               const SizedBox(height: 12),
 
-              /// 🚕 Trip List
+              /// 🚕 TRIP LIST
               _tripTile(
                 title: "Airport → MP Nagar",
                 subtitle: "Today • 10:30 AM",
                 amount: "₹320",
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ),
               _tripTile(
                 title: "ISBT → New Market",
                 subtitle: "Yesterday • 8:15 PM",
                 amount: "₹280",
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ),
               _tripTile(
                 title: "Railway Stn → Area Colony",
                 subtitle: "Yesterday • 2:40 PM",
                 amount: "₹410",
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ),
 
               const SizedBox(height: 20),
 
-              /// ⬇ Download Statement
+              /// ⬇ DOWNLOAD STATEMENT
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100, // Dark panel
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: const [
-                    Icon(Icons.download, color: Colors.greenAccent), // Visible icon
+                    Icon(Icons.download, color: Colors.green),
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -84,14 +95,14 @@ class TripHistoryScreen extends StatelessWidget {
                             "Download Statement",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: Colors.black, // WHITE TEXT
+                              color: Colors.black,
                             ),
                           ),
                           SizedBox(height: 4),
                           Text(
                             "Daily / Weekly",
                             style: TextStyle(
-                              color: Colors.black45, // LIGHT WHITE TEXT
+                              color: Colors.black54,
                               fontSize: 12,
                             ),
                           ),
@@ -100,11 +111,11 @@ class TripHistoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ).animate().fadeIn().slideY(begin: 0.1),
 
               const SizedBox(height: 20),
 
-              /// 🎁 Offers Image
+              /// 🎁 OFFERS BANNER
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: Image.network(
@@ -113,17 +124,20 @@ class TripHistoryScreen extends StatelessWidget {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ).animate().fadeIn().slideY(begin: 0.1),
 
               const Spacer(),
 
-              /// ✅ Go to Wallet Button
+              /// 💰 GO TO WALLET
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent, // Visible button
+                    backgroundColor: AppColors.ridePrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -136,12 +150,12 @@ class TripHistoryScreen extends StatelessWidget {
                   child: const Text(
                     "Go to Wallet",
                     style: TextStyle(
-                      color: Colors.black, // BLACK BUTTON TEXT
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
-              ),
+                ),
+              ).animate().fadeIn().slideY(begin: 0.1),
             ],
           ),
         ),
@@ -149,7 +163,7 @@ class TripHistoryScreen extends StatelessWidget {
     );
   }
 
-  /// 🚕 Trip Tile Widget
+  /// 🚕 TRIP TILE
   Widget _tripTile({
     required String title,
     required String subtitle,
@@ -159,8 +173,14 @@ class TripHistoryScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100, // Dark panel
+        color: Colors.white,
         borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -172,7 +192,7 @@ class TripHistoryScreen extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black, // WHITE TEXT
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -180,7 +200,7 @@ class TripHistoryScreen extends StatelessWidget {
                   subtitle,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.black45, // LIGHT WHITE TEXT
+                    color: Colors.black54,
                   ),
                 ),
               ],
@@ -191,11 +211,11 @@ class TripHistoryScreen extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
-              color: Colors.black, // WHITE TEXT
+              color: Colors.green,
             ),
           ),
         ],
       ),
-    );
+    ).animate().fadeIn().slideY(begin: 0.1);
   }
 }

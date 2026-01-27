@@ -209,7 +209,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                                   const Padding(
                                     padding: EdgeInsets.only(top: 6),
                                     child: Icon(Icons.check_circle,
-                                        color: AppColors.brownPrimary),
+                                        color: AppColors.ridePrimary),
                                   )
                               ],
                             ),
@@ -236,7 +236,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.brownPrimary,
+                        backgroundColor: AppColors.ridePrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),

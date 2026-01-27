@@ -2,14 +2,14 @@ import 'dart:async';
 import 'package:cab_bandhu/features/auth/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class SplashFirstScreen extends StatefulWidget {
+  const SplashFirstScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashFirstScreen> createState() => _SplashFirstScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashFirstScreenState extends State<SplashFirstScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
@@ -47,8 +47,8 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const OnboardingRideScreen(),
-        ),
+          builder: (_) => const SplashScreen(),
+        )
       );
     });
   }
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFC107), // Cab Bandhu Yellow
+      backgroundColor: const Color(0xfffdb50b),
       body: Center(
         child: FadeTransition(
           opacity: _fade,
@@ -73,25 +73,11 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 🚖 Logo
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Image.asset(
-                      'assets/images/cab_bandhu_logo.jpeg',
-                      width: 220,
-                    ),
+                  Image.asset(
+                    'assets/images/cab_bandhu_logo.jpeg',
+                    width: 220,
                   ),
                   const SizedBox(height: 20),
-
-                  // ✨ Tagline
                   const Text(
                     'Your Ride. Your Partner.',
                     style: TextStyle(

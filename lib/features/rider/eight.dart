@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -16,16 +17,16 @@ class DriverTripCompletedScreen extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // 🔥 DARK BACKGROUND
+      backgroundColor: const Color(0xFFF9FAFB), // 🌤 LIGHT BACKGROUND
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
           "Trip Completed",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black87),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -33,10 +34,11 @@ class DriverTripCompletedScreen extends StatelessWidget {
           children: [
 
             /// ✅ CHECK ICON
-            const Icon(Icons.check_circle, size: 80, color: Colors.green)
-                .animate()
-                .fadeIn(duration: 500.ms)
-                .slideY(begin: -0.2),
+            const Icon(
+              Icons.check_circle,
+              size: 80,
+              color: AppColors.ridePrimary,
+            ).animate().fadeIn().slideY(begin: -0.2),
 
             const SizedBox(height: 10),
 
@@ -44,52 +46,48 @@ class DriverTripCompletedScreen extends StatelessWidget {
             const Text(
               "Trip Successfully Completed",
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            ).animate(delay: 100.ms)
-                .fadeIn()
-                .slideY(begin: -0.1),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ).animate().fadeIn().slideY(begin: -0.1),
 
             const SizedBox(height: 30),
 
-            /// 💰 FARE DETAILS
-            _fareRow("Base Fare", baseFare)
-                .animate()
-                .fadeIn(delay: 200.ms)
-                .slideX(begin: -0.2),
-            _fareRow("Distance Fare", distanceFare)
-                .animate()
-                .fadeIn(delay: 300.ms)
-                .slideX(begin: -0.2),
-            _fareRow("Time Fare", timeFare)
-                .animate()
-                .fadeIn(delay: 400.ms)
-                .slideX(begin: -0.2),
-            const Divider(color: Colors.white54),
-            _fareRow("TOTAL", total, bold: true)
-                .animate()
-                .fadeIn(delay: 500.ms)
-                .slideX(begin: -0.2),
+            /// 💰 FARE DETAILS CARD
+            _card(
+              child: Column(
+                children: [
+                  _fareRow("Base Fare", baseFare),
+                  _fareRow("Distance Fare", distanceFare),
+                  _fareRow("Time Fare", timeFare),
+                  const Divider(),
+                  _fareRow("TOTAL", total, bold: true),
+                ],
+              ),
+            ).animate().fadeIn().slideY(begin: 0.1),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
             /// 💳 PAYMENT STATUS
             _paymentStatusCard()
                 .animate()
-                .fadeIn(delay: 600.ms)
+                .fadeIn()
                 .slideY(begin: 0.2),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             Align(
               alignment: Alignment.centerLeft,
               child: const Text(
                 "Offers & Rewards",
                 style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
-            ).animate(delay: 700.ms).fadeIn(),
+            ).animate().fadeIn(),
 
             const SizedBox(height: 10),
 
@@ -99,42 +97,41 @@ class DriverTripCompletedScreen extends StatelessWidget {
               adsImages: const [
                 "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
               ],
-            )
-                .animate(delay: 800.ms)
-                .fadeIn()
-                .scale(begin: const Offset(0.95, 0.95)),
+            ).animate().fadeIn().scale(begin: const Offset(0.95, 0.95)),
 
             const Spacer(),
 
             /// 🚦 RATE BUTTON
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  _slideRoute(const RatePassengerScreen()),
-                );
-              },
-              child: const Text(
-                "Rate User",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.ridePrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    _slideRoute(const RatePassengerScreen()),
+                  );
+                },
+                child: const Text(
+                  "Rate User",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ).animate(delay: 900.ms).fadeIn().slideY(begin: 0.3),
+            ).animate().fadeIn().slideY(begin: 0.3),
           ],
         ),
       ),
-    )
-    // 🌟 SCREEN ENTER ANIMATION
-        .animate()
-        .fadeIn(duration: 400.ms)
-        .slideY(begin: 0.1);
+    ).animate().fadeIn().slideY(begin: 0.1);
   }
 
   /// 💰 FARE ROW
@@ -147,19 +144,41 @@ class DriverTripCompletedScreen extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-                fontSize: bold ? 16 : 14,
-                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                color: Colors.white),
+              fontSize: bold ? 16 : 14,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              color: Colors.black87,
+            ),
           ),
           Text(
             "₹${value.toStringAsFixed(0)}",
             style: TextStyle(
-                fontSize: bold ? 16 : 14,
-                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                color: Colors.white),
+              fontSize: bold ? 16 : 14,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              color: Colors.black87,
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  /// 🧱 CARD
+  Widget _card({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 
@@ -169,20 +188,21 @@ class DriverTripCompletedScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade900,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.greenAccent),
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.green.shade300),
       ),
       child: Row(
         children: const [
-          Icon(Icons.payments, color: Colors.greenAccent),
+          Icon(Icons.payments, color: Colors.green),
           SizedBox(width: 12),
           Expanded(
             child: Text(
               "Payment Received (Cash)",
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.greenAccent),
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
             ),
           ),
         ],
@@ -191,8 +211,7 @@ class DriverTripCompletedScreen extends StatelessWidget {
   }
 }
 
-/// ================= IMAGE ADS BANNER =================
-
+/// ================= IMAGE ADS BANNER ================
 class ImageAdsBanner extends StatefulWidget {
   final List<String> adsImages;
   final double height;
@@ -218,7 +237,6 @@ class _ImageAdsBannerState extends State<ImageAdsBanner> {
   void initState() {
     super.initState();
     _controller = PageController();
-
     _timer = Timer.periodic(widget.autoScrollDuration, (_) {
       if (!_controller.hasClients) return;
       _index = (_index + 1) % widget.adsImages.length;
@@ -258,7 +276,7 @@ class _ImageAdsBannerState extends State<ImageAdsBanner> {
   }
 }
 
-/// 🌟 CUSTOM PAGE TRANSITION
+/// 🌟 PAGE TRANSITION
 Route _slideRoute(Widget page) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 400),

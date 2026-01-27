@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/seven_eight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,7 +11,7 @@ class DriverReachDropScreen extends StatelessWidget {
     final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: const Color(0xFFF9FAFB), // 🌤 Light background
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -21,83 +22,68 @@ class DriverReachDropScreen extends StatelessWidget {
               /// 🔙 Back + Title
               Row(
                 children: const [
-                  Icon(Icons.arrow_back, color: Colors.white), // WHITE ICON
+                  Icon(Icons.arrow_back, color: Colors.black87),
                   SizedBox(width: 12),
                   Text(
                     "Drop Location",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white, // WHITE TEXT
+                      color: Colors.black87,
                     ),
                   )
                 ],
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              ).animate().fadeIn().slideX(begin: -0.1),
 
               const SizedBox(height: 24),
 
               /// ✅ Reached Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100, // Dark panel for visibility
-                  borderRadius: BorderRadius.circular(14),
-                ),
+              _card(
                 child: Column(
                   children: const [
                     CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Colors.green,
-                      child: Icon(Icons.flag, color: Colors.white, size: 28),
+                      radius: 30,
+                      backgroundColor: AppColors.ridePrimary,
+                      child: Icon(Icons.flag, color: Colors.black, size: 28),
                     ),
                     SizedBox(height: 14),
                     Text(
                       "You've reached the drop location",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black, // Text visible on light card
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
                       ),
                     )
                   ],
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
+              ),
 
               const SizedBox(height: 20),
 
               /// 📍 Address
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100, // Dark panel
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              _card(
                 child: Row(
                   children: const [
-                    Icon(Icons.location_on, color: Colors.red),
+                    Icon(Icons.location_on, color: Colors.redAccent),
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         "MP Nagar Zone 2, Bhopal",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black, // BLACK TEXT on light panel
+                          color: Colors.black87,
                         ),
                       ),
                     )
                   ],
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ),
 
               const SizedBox(height: 16),
 
               /// 📊 Trip Info
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100, // Dark panel
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              _card(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
@@ -106,45 +92,46 @@ class DriverReachDropScreen extends StatelessWidget {
                     _InfoTile(title: "Payment", value: "Cash"),
                   ],
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ),
 
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text(
-                  "Offers & Captain Alerts",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white, // WHITE TEXT
-                  ),
+
+              /// 🧾 Section Title
+              const Text(
+                "Offers & Captain Alerts",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              ).animate().fadeIn().slideX(begin: -0.1),
+
               const SizedBox(height: 10),
 
               /// 🖼 Offer Image
               ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(16),
                 child: Image.network(
                   "https://images.unsplash.com/photo-1520975916090-3105956dac38",
                   height: w * 0.45,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              ).animate().fadeIn().slideY(begin: 0.1),
 
               const Spacer(),
 
               /// 🚗 Complete Trip Button
               SizedBox(
                 width: double.infinity,
-                height: 52,
+                height: 54,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: AppColors.ridePrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
+                    elevation: 2,
                   ),
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -162,11 +149,11 @@ class DriverReachDropScreen extends StatelessWidget {
                     "Complete Trip",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black, // BLACK BUTTON TEXT
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+                ).animate().fadeIn().slideY(begin: 0.1),
               ),
             ],
           ),
@@ -174,9 +161,29 @@ class DriverReachDropScreen extends StatelessWidget {
       ),
     );
   }
+
+  /// 🧱 Reusable Card
+  Widget _card({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
+    ).animate().fadeIn().slideY(begin: 0.1);
+  }
 }
 
-/// 🔹 Small Info Widget
+/// 🔹 Info Tile
 class _InfoTile extends StatelessWidget {
   final String title;
   final String value;
@@ -187,13 +194,23 @@ class _InfoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(title, style: const TextStyle(fontSize: 12, color: Colors.black)),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black54,
+          ),
+        ),
         const SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black45),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
         ),
       ],
-    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1);
+    );
   }
 }

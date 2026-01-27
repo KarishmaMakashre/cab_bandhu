@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/ten.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -34,7 +35,7 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
     final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: const Color(0xFFF9FAFB), // 🌤 LIGHT BACKGROUND
       body: SafeArea(
         child: Column(
           children: [
@@ -50,7 +51,8 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                       children: [
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: const Icon(Icons.arrow_back, color: Colors.white),
+                          child: const Icon(Icons.arrow_back,
+                              color: Colors.black87),
                         ),
                         const SizedBox(width: 12),
                         const Text(
@@ -58,11 +60,11 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: Colors.black87,
                           ),
                         ),
                       ],
-                    ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+                    ).animate().fadeIn().slideX(begin: -0.1),
 
                     const SizedBox(height: 24),
 
@@ -70,8 +72,15 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: const [
@@ -87,12 +96,12 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: Colors.black87,
                             ),
                           ),
                         ],
                       ),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
+                    ).animate().fadeIn().slideY(begin: -0.1),
 
                     const SizedBox(height: 24),
 
@@ -102,9 +111,9 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: Colors.black87,
                       ),
-                    ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+                    ).animate().fadeIn().slideX(begin: -0.1),
 
                     const SizedBox(height: 16),
 
@@ -118,19 +127,19 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                             size: 36,
                             color: i < rating
                                 ? Colors.orange
-                                : Colors.grey.shade700,
+                                : Colors.grey.shade400,
                           ),
                           onPressed: () => setState(() => rating = i + 1),
                         );
                       }),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
+                    ).animate().fadeIn().slideY(begin: -0.1),
 
                     const Center(
                       child: Text(
                         "Excellent experience",
-                        style: TextStyle(color: Colors.white70),
+                        style: TextStyle(color: Colors.black54),
                       ),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
+                    ).animate().fadeIn().slideY(begin: -0.1),
 
                     const SizedBox(height: 20),
 
@@ -150,19 +159,22 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                                   : selectedTags.add(tag);
                             });
                           },
-                          selectedColor: Colors.green.withOpacity(.15),
+                          selectedColor:
+                          AppColors.ridePrimary.withOpacity(.15),
                           labelStyle: TextStyle(
-                            color: selected ? Colors.green : Colors.black,
+                            color: selected
+                                ? AppColors.ridePrimary
+                                : Colors.black87,
                           ),
                           side: BorderSide(
                             color: selected
-                                ? Colors.green
+                                ? AppColors.ridePrimary
                                 : Colors.grey.shade400,
                           ),
-                          backgroundColor: Colors.grey.shade100,
+                          backgroundColor: Colors.white,
                         );
                       }).toList(),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+                    ).animate().fadeIn().slideY(begin: 0.1),
 
                     const SizedBox(height: 24),
 
@@ -170,21 +182,21 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade400),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: TextField(
                         controller: feedbackCtrl,
                         maxLines: 5,
-                        style: const TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black87),
                         decoration: const InputDecoration(
                           hintText: "Additional feedback (optional)",
                           hintStyle: TextStyle(color: Colors.black54),
                           border: InputBorder.none,
                         ),
                       ),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+                    ).animate().fadeIn().slideY(begin: 0.1),
 
                     const SizedBox(height: 20),
 
@@ -197,9 +209,9 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+                    ).animate().fadeIn().slideY(begin: 0.1),
 
-                    const SizedBox(height: 80), // space for button
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
@@ -213,7 +225,7 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: AppColors.ridePrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -230,10 +242,11 @@ class _RatePassengerScreenState extends State<RatePassengerScreen> {
                     "Submit Rating",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+                ).animate().fadeIn().slideY(begin: 0.1),
               ),
             ),
           ],

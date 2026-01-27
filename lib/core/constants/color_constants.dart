@@ -16,7 +16,7 @@ class AppColors {
   // ---------------------------
   // Ride Colors
   // ---------------------------
-  static const Color ridePrimary = Color(0xFFFFC107);
+  static const Color ridePrimary = Color(0xfffdb50b);
   static const Color ridePrimaryLight = Color.fromARGB(255, 250, 188, 83);
   static const Color ridePrimaryDark = Color(0xFFFFA000);
     // ---------------------------

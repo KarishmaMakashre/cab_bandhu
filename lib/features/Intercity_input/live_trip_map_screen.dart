@@ -10,56 +10,109 @@ class TripMapPreviewScreen extends StatelessWidget {
         "https://media.istockphoto.com/id/1189064346/photo/city-map-with-pin-pointers-3d-rendering-image.webp?a=1&b=1&s=612x612&w=0&k=20&c=ATkI2VsMyZ2K4zk-Qq12g6cRpO2VJvt6UPPDb_sshSg=";
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade900, // dark background
+      backgroundColor: const Color(0xFFF6F7FB), // light background
       appBar: AppBar(
-        backgroundColor: Colors.black87,
-        iconTheme: const IconThemeData(color: Colors.white), // <-- back button color
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
           "Trip Map Preview",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
           ),
         ),
       ),
       body: Column(
         children: [
-          // Map full screen
+          /// 🗺️ Map Preview
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 8,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
               child: ClipRRect(
-                child: Image.network(
-                  mapUrl,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                borderRadius: BorderRadius.circular(20),
+                child: Stack(
+                  children: [
+                    Image.network(
+                      mapUrl,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+
+                    /// Gradient overlay
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 120,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.black54,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// Trip Info
+                    Positioned(
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.route, color: Colors.green),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                "Indore → Bhopal\nApprox. 3h 30m",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
 
-          // Continue Button
+          /// ▶️ Continue Button
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 55),
-                backgroundColor: Colors.greenAccent.shade400,
-                foregroundColor: Colors.black,
-                elevation: 6,
+                minimumSize: const Size(double.infinity, 56),
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                elevation: 4,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                shadowColor: Colors.black54,
               ),
               onPressed: () {
                 Navigator.push(
@@ -70,9 +123,10 @@ class TripMapPreviewScreen extends StatelessWidget {
               child: const Text(
                 "Continue Trip",
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    letterSpacing: 0.5),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.4,
+                ),
               ),
             ),
           ),

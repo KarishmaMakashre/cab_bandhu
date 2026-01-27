@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/color_constants.dart';
+import '../Intercity_input/driver_dashboard_screen.dart';
 import '../porter_partner/screens/porter_dashboard_screen.dart';
 import 'first.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,7 +12,7 @@ class WalletPayoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: const Color(0xFFF9FAFB), // 🌤 Light background
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -21,19 +22,25 @@ class WalletPayoutScreen extends StatelessWidget {
 
               /// 🔙 Back + Title
               Row(
-                children: const [
-                  Icon(Icons.arrow_back, color: Colors.white),
-                  SizedBox(width: 12),
-                  Text(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.arrow_back, color: Colors.black),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
                     "Wallet & Payout",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                 ],
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideX(begin: -0.1),
 
               const SizedBox(height: 20),
 
@@ -42,7 +49,7 @@ class WalletPayoutScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent, // Panel
+                  color: AppColors.ridePrimary,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Column(
@@ -51,7 +58,7 @@ class WalletPayoutScreen extends StatelessWidget {
                     Text(
                       "Available Balance",
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: Colors.white70,
                         fontSize: 13,
                       ),
                     ),
@@ -59,35 +66,43 @@ class WalletPayoutScreen extends StatelessWidget {
                     Text(
                       "₹5,420",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.1),
 
               const SizedBox(height: 24),
 
-              /// 💸 Payout Options Title
+              /// 💸 Payout Options
               const Text(
                 "Payout Options",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideX(begin: -0.1),
 
               const SizedBox(height: 12),
 
-              /// 💸 Option Tiles
               _optionTile(
                 icon: Icons.account_balance,
                 title: "Bank Transfer",
                 subtitle: "Withdraw money to your bank account",
                 onTap: () {},
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.1),
 
               const SizedBox(height: 10),
 
@@ -96,18 +111,24 @@ class WalletPayoutScreen extends StatelessWidget {
                 title: "UPI Transfer",
                 subtitle: "Instant payout to UPI",
                 onTap: () {},
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.1),
 
               const SizedBox(height: 24),
 
-              /// 🎁 Rewards Title
+              /// 🎁 Rewards
               const Text(
                 "Rewards & Incentives",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideX(begin: -0.1),
 
               const SizedBox(height: 12),
 
@@ -116,11 +137,14 @@ class WalletPayoutScreen extends StatelessWidget {
                 title: "Incentives & Bonus",
                 subtitle: "View today’s rewards and bonuses",
                 onTap: () {},
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.1),
 
               const SizedBox(height: 24),
 
-              /// 🖼 Offers Image
+              /// 🖼 Offer Banner
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: Image.network(
@@ -129,7 +153,10 @@ class WalletPayoutScreen extends StatelessWidget {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.1),
 
               const Spacer(),
 
@@ -139,7 +166,7 @@ class WalletPayoutScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: AppColors.ridePrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -147,7 +174,7 @@ class WalletPayoutScreen extends StatelessWidget {
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
                     final role = prefs.getString('user_role');
-                    debugPrint('User role from prefs: $role');
+
                     if (role == 'rider') {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -156,7 +183,17 @@ class WalletPayoutScreen extends StatelessWidget {
                         ),
                             (route) => false,
                       );
-                    } else {
+                    }
+                    else if(role == 'intercity'){
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DriverDashboardScreen(),
+                        ),
+                            (route) => false,
+                      );
+                    }
+                    else {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -169,12 +206,15 @@ class WalletPayoutScreen extends StatelessWidget {
                   child: const Text(
                     "Go to dashboard",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .slideY(begin: 0.1),
               ),
             ],
           ),
@@ -183,7 +223,7 @@ class WalletPayoutScreen extends StatelessWidget {
     );
   }
 
-  /// 🔹 Option Tile Widget
+  /// 🔹 Option Tile
   Widget _optionTile({
     required IconData icon,
     required String title,
@@ -195,32 +235,43 @@ class WalletPayoutScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100, // Panel
+          color: Colors.white,
           borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 22,
-              backgroundColor: Colors.greenAccent.withOpacity(0.3),
-              child: Icon(icon, color: Colors.greenAccent),
+              backgroundColor: AppColors.ridePrimary.withOpacity(0.15),
+              child: Icon(icon, color: AppColors.ridePrimary),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      )),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(subtitle,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      )),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black54,
+                    ),
+                  ),
                 ],
               ),
             ),

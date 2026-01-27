@@ -15,7 +15,9 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
     _animationController.forward();
   }
 
@@ -32,11 +34,15 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
         curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
       ),
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
-            .animate(CurvedAnimation(
-          parent: _animationController,
-          curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
-        )),
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.08),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
+          ),
+        ),
         child: child,
       ),
     );
@@ -45,35 +51,36 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: Colors.white,
         title: const Text(
           "Menu",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
-          // 👤 PROFILE HEADER
+
+          /// 👤 PROFILE HEADER
           _animatedFadeSlide(
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.grey.shade900,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black38,
-                    blurRadius: 8,
-                    offset: Offset(0, 3),
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -95,7 +102,7 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: 4),
@@ -103,7 +110,7 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
                           "Driver Partner",
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white70,
+                            color: Colors.black54,
                           ),
                         ),
                       ],
@@ -111,13 +118,13 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
                   ),
                   _actionIcon(
                     icon: Icons.call,
-                    color: Colors.greenAccent,
+                    color: Colors.green,
                     onTap: () {},
                   ),
                   const SizedBox(width: 8),
                   _actionIcon(
                     icon: Icons.message,
-                    color: Colors.blueAccent,
+                    color: Colors.blue,
                     onTap: () {},
                   ),
                 ],
@@ -126,63 +133,72 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
             delay: 0,
           ),
 
-          // 🔹 MENU LIST
+          /// 🔹 MENU LIST
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 _animatedFadeSlide(
-                    _menuTile(
-                        icon: Icons.person,
-                        title: "My Profile",
-                        subtitle: "View & edit profile details",
-                        color: Colors.grey.shade800,
-                        onTap: () {}),
-                    delay: 100),
+                  _menuTile(
+                    icon: Icons.person,
+                    title: "My Profile",
+                    subtitle: "View & edit profile details",
+                    iconColor: Colors.indigo,
+                    onTap: () {},
+                  ),
+                  delay: 100,
+                ),
                 _animatedFadeSlide(
-                    _menuTile(
-                        icon: Icons.account_balance_wallet,
-                        title: "Wallet & Earnings",
-                        subtitle: "View balance & payouts",
-                        color: Colors.green.shade900,
-                        onTap: () {}),
-                    delay: 200),
+                  _menuTile(
+                    icon: Icons.account_balance_wallet,
+                    title: "Wallet & Earnings",
+                    subtitle: "View balance & payouts",
+                    iconColor: Colors.green,
+                    onTap: () {},
+                  ),
+                  delay: 200,
+                ),
                 _animatedFadeSlide(
-                    _menuTile(
-                        icon: Icons.history,
-                        title: "Trip History",
-                        subtitle: "Your completed rides",
-                        color: Colors.blueGrey.shade900,
-                        onTap: () {}),
-                    delay: 300),
+                  _menuTile(
+                    icon: Icons.history,
+                    title: "Trip History",
+                    subtitle: "Your completed rides",
+                    iconColor: Colors.blueGrey,
+                    onTap: () {},
+                  ),
+                  delay: 300,
+                ),
                 _animatedFadeSlide(
-                    _menuTile(
-                        icon: Icons.settings,
-                        title: "Settings",
-                        subtitle: "App preferences & account",
-                        color: Colors.orange.withOpacity(0.6),
-                        onTap: () {}),
-                    delay: 400),
+                  _menuTile(
+                    icon: Icons.settings,
+                    title: "Settings",
+                    subtitle: "App preferences & account",
+                    iconColor: Colors.orange,
+                    onTap: () {},
+                  ),
+                  delay: 400,
+                ),
                 _animatedFadeSlide(
-                    _menuTile(
-                        icon: Icons.help_outline,
-                        title: "Help & Support",
-                        subtitle: "Get help or contact support",
-                        color: Colors.yellow.withOpacity(0.2),
-                        onTap: () {}),
-                    delay: 500),
+                  _menuTile(
+                    icon: Icons.help_outline,
+                    title: "Help & Support",
+                    subtitle: "Get help or contact support",
+                    iconColor: Colors.purple,
+                    onTap: () {},
+                  ),
+                  delay: 500,
+                ),
               ],
             ),
           ),
 
-          // 🔴 LOGOUT
+          /// 🔴 LOGOUT
           _animatedFadeSlide(
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.greenAccent,
-                  elevation: 2,
+                  backgroundColor: Colors.redAccent,
                   minimumSize: const Size(double.infinity, 52),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -208,6 +224,7 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
     );
   }
 
+  /// 🔹 Action Icon
   Widget _actionIcon({
     required IconData icon,
     required Color color,
@@ -219,7 +236,7 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.2),
+          color: color.withOpacity(0.12),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: color, size: 20),
@@ -227,44 +244,59 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
     );
   }
 
+  /// 🔹 Menu Tile
   Widget _menuTile({
     required IconData icon,
     required String title,
     required String subtitle,
-    required Color color,
+    required Color iconColor,
     required VoidCallback onTap,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: color,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black38,
+            color: Colors.black.withOpacity(0.06),
             blurRadius: 8,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         leading: Container(
           height: 44,
           width: 44,
           decoration: BoxDecoration(
-            color: Colors.white12,
+            color: iconColor.withOpacity(0.15),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: Colors.white, size: 24),
+          child: Icon(icon, color: iconColor, size: 24),
         ),
-        title: Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.w600, fontSize: 15, color: Colors.white)),
-        subtitle: Text(subtitle,
-            style: const TextStyle(fontSize: 12, color: Colors.white70)),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded,
-            size: 16, color: Colors.white54),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black54,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 16,
+          color: Colors.black38,
+        ),
         onTap: onTap,
       ),
     );

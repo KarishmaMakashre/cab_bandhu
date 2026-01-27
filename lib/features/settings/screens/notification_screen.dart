@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/color_constants.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -10,10 +9,10 @@ class NotificationScreen extends StatefulWidget {
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> with SingleTickerProviderStateMixin {
+class _NotificationScreenState extends State<NotificationScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Dummy data for notifications
   final List<Map<String, dynamic>> _dummyNotifications = [
     {
       'tab': 'past',
@@ -24,7 +23,6 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
       'price': '₹28.12',
       'origin': '22, MP-10, Indore, Madhya Pradesh',
       'destination': '16, Acotel Hub, Indore, Madhya Pradesh',
-      'type': 'ride',
       'message': 'Ride dropped successfully!',
     },
     {
@@ -36,10 +34,8 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
       'price': '₹50.00',
       'origin': 'Your current location',
       'destination': 'Airport, Indore',
-      'type': 'ride',
       'message': 'Upcoming ride to airport.',
     },
-    // Add other notifications here...
   ];
 
   @override
@@ -55,39 +51,37 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
   }
 
   Widget _buildNotificationItem(Map<String, dynamic> item) {
-    Color statusColor = item['status'] == 'Dropped' || item['status'] == 'Paid'
-        ? Colors.green
-        : item['status'] == 'Cancelled'
-        ? Colors.red
-        : Colors.greenAccent;
-
-    IconData icon = item['icon'];
-    String status = item['status'];
-    String date = item['date'];
-    String price = item['price'];
-    String origin = item['origin'];
-    String destination = item['destination'];
-    String message = item['message'];
+    final Color statusColor =
+    item['status'] == 'Dropped' ? Colors.green : AppColors.ridePrimary;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100, // Panel color
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          /// HEADER
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: statusColor, size: 20),
+                child: Icon(item['icon'], color: statusColor, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -95,17 +89,17 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      status,
-                      style: TextStyle(
+                      item['status'],
+                      style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      date,
-                      style: TextStyle(
+                      item['date'],
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black54,
                       ),
@@ -113,57 +107,62 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                   ],
                 ),
               ),
-              if (price != 'N/A')
+              if (item['price'] != 'N/A')
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.greenAccent.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6),
+                    color: Colors.green.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    price,
+                    item['price'],
                     style: const TextStyle(
-                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.green,
                     ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(height: 12),
+
+          const SizedBox(height: 14),
+
+          /// ORIGIN
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.location_on, color: Colors.green, size: 16),
-              ),
+              const Icon(Icons.my_location, size: 16, color: Colors.green),
               const SizedBox(width: 8),
-              Expanded(child: Text(origin, style: const TextStyle(color: Colors.black))),
+              Expanded(
+                child: Text(
+                  item['origin'],
+                  style: const TextStyle(color: Colors.black87),
+                ),
+              ),
             ],
           ),
+
           const SizedBox(height: 8),
+
+          /// DESTINATION
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.location_on, color: Colors.red, size: 16),
-              ),
+              const Icon(Icons.location_on, size: 16, color: Colors.red),
               const SizedBox(width: 8),
-              Expanded(child: Text(destination, style: const TextStyle(color: Colors.black))),
+              Expanded(
+                child: Text(
+                  item['destination'],
+                  style: const TextStyle(color: Colors.black87),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 8),
+
+          const SizedBox(height: 10),
+
+          /// MESSAGE
           Text(
-            message,
+            item['message'],
             style: const TextStyle(
               fontSize: 12,
               color: Colors.black54,
@@ -172,55 +171,58 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
           ),
         ],
       ),
-    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.05);
+    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.08);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xFFF5F6FA),
+
       appBar: AppBar(
-        title: const Text('Notifications', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF121212),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
 
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.greenAccent,
-          unselectedLabelColor: Colors.white,
-          indicatorColor: Colors.greenAccent,
+          labelColor: AppColors.ridePrimary,
+          unselectedLabelColor: Colors.black54,
+          indicatorColor: AppColors.ridePrimary,
+          indicatorWeight: 3,
           tabs: const [
             Tab(text: 'Past'),
             Tab(text: 'Upcoming'),
           ],
         ),
       ),
+
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Past Tab
-          ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: _dummyNotifications.where((item) => item['tab'] == 'past').length,
-            separatorBuilder: (context, index) => Divider(color: Colors.grey[300], height: 1),
-            itemBuilder: (context, index) {
-              final item = _dummyNotifications.where((item) => item['tab'] == 'past').toList()[index];
-              return _buildNotificationItem(item);
-            },
-          ),
-          // Upcoming Tab
-          ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: _dummyNotifications.where((item) => item['tab'] == 'upcoming').length,
-            separatorBuilder: (context, index) => Divider(color: Colors.grey[300], height: 1),
-            itemBuilder: (context, index) {
-              final item = _dummyNotifications.where((item) => item['tab'] == 'upcoming').toList()[index];
-              return _buildNotificationItem(item);
-            },
-          ),
+          _buildTab('past'),
+          _buildTab('upcoming'),
         ],
       ),
+    );
+  }
+
+  Widget _buildTab(String tab) {
+    final list =
+    _dummyNotifications.where((item) => item['tab'] == tab).toList();
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: list.length,
+      itemBuilder: (_, i) => _buildNotificationItem(list[i]),
     );
   }
 }

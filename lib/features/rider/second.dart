@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/third.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,16 +14,19 @@ class DriverRideAcceptedScreen extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xffF6F7FB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           "Ride Accepted",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -30,11 +34,9 @@ class DriverRideAcceptedScreen extends StatelessWidget {
           children: [
 
             /// 🚕 PASSENGER CARD
-            _card(
-              child: _passengerRow(),
-            )
+            _card(child: _passengerRow())
                 .animate()
-                .fadeIn(duration: 500.ms)
+                .fadeIn(duration: 400.ms)
                 .slideY(begin: -0.2),
 
             const SizedBox(height: 16),
@@ -52,7 +54,7 @@ class DriverRideAcceptedScreen extends StatelessWidget {
                   _routeDivider(),
                   _locationRow(
                     icon: Icons.location_on,
-                    color: Colors.red,
+                    color: Colors.redAccent,
                     title: "Drop",
                     value: "MP Nagar Zone 2",
                   ),
@@ -60,7 +62,7 @@ class DriverRideAcceptedScreen extends StatelessWidget {
               ),
             )
                 .animate(delay: 150.ms)
-                .fadeIn(duration: 500.ms)
+                .fadeIn()
                 .slideX(begin: -0.2),
 
             const SizedBox(height: 16),
@@ -77,7 +79,7 @@ class DriverRideAcceptedScreen extends StatelessWidget {
               ),
             )
                 .animate(delay: 300.ms)
-                .fadeIn(duration: 500.ms)
+                .fadeIn()
                 .slideX(begin: 0.2),
 
             const SizedBox(height: 20),
@@ -88,8 +90,7 @@ class DriverRideAcceptedScreen extends StatelessWidget {
                 "Offers & Rewards",
                 style: TextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ).animate().fadeIn(delay: 400.ms),
@@ -112,11 +113,12 @@ class DriverRideAcceptedScreen extends StatelessWidget {
             /// 🚦 NAVIGATE BUTTON
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
+                backgroundColor: AppColors.ridePrimary,
                 minimumSize: const Size(double.infinity, 54),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                elevation: 4,
               ),
               onPressed: () {
                 Navigator.push(
@@ -140,9 +142,8 @@ class DriverRideAcceptedScreen extends StatelessWidget {
         ),
       ),
     )
-    // 🌟 SCREEN ENTER ANIMATION
         .animate()
-        .fadeIn(duration: 400.ms)
+        .fadeIn(duration: 350.ms)
         .slideY(begin: 0.1);
   }
 
@@ -152,7 +153,9 @@ class DriverRideAcceptedScreen extends StatelessWidget {
       children: [
         const CircleAvatar(
           radius: 26,
-          backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
+          backgroundImage: NetworkImage(
+            "https://i.pravatar.cc/150?img=3",
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -161,11 +164,16 @@ class DriverRideAcceptedScreen extends StatelessWidget {
             children: const [
               Text(
                 "Rahul Sharma",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 4),
-              Text("⭐ 4.8 • 52 trips",
-                  style: TextStyle(color: Colors.grey)),
+              Text(
+                "⭐ 4.8 • 52 trips",
+                style: TextStyle(color: Colors.black54),
+              ),
             ],
           ),
         ),
@@ -181,18 +189,18 @@ class DriverRideAcceptedScreen extends StatelessWidget {
     );
   }
 
-  /// 🔲 WHITE CARD
+  /// 🔲 CARD
   Widget _card({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -210,18 +218,27 @@ class DriverRideAcceptedScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 10),
+        Icon(icon, color: color, size: 18),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black54,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(value,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600)),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),
@@ -235,7 +252,10 @@ class DriverRideAcceptedScreen extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 10),
-          SizedBox(height: 24, child: VerticalDivider(thickness: 1)),
+          SizedBox(
+            height: 26,
+            child: VerticalDivider(thickness: 1),
+          ),
         ],
       ),
     );
@@ -244,18 +264,27 @@ class DriverRideAcceptedScreen extends StatelessWidget {
   Widget _tripInfo(String title, String value) {
     return Column(
       children: [
-        Text(title,
-            style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black54,
+          ),
+        ),
         const SizedBox(height: 6),
-        Text(value,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
 }
 
-/// 🚀 CUSTOM PAGE TRANSITION
+/// 🚀 PAGE TRANSITION
 Route _slideRoute(Widget page) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 400),

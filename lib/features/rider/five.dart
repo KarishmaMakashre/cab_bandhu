@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/six.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -156,7 +157,7 @@ class DriverTripInProgressScreen extends StatelessWidget {
                 /// 🛑 END TRIP BUTTON
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: AppColors.ridePrimary,
                     minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -175,7 +176,7 @@ class DriverTripInProgressScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // BLACK BUTTON TEXT
+                      color: Colors.white, // BLACK BUTTON TEXT
                     ),
                   ),
                 ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),

@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -41,15 +42,19 @@ class _DriverPickupVerificationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // 🔥 DARK BG
+      backgroundColor: const Color(0xffF6F7FB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
           "Pickup Verification",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
@@ -77,33 +82,37 @@ class _DriverPickupVerificationScreenState
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
                                 ),
                               ),
                               SizedBox(height: 4),
                               Text(
                                 "⭐ 4.8 • 52 trips",
-                                style: TextStyle(color: Colors.black45),
+                                style: TextStyle(color: Colors.black54),
                               ),
                             ],
                           ),
                         ),
                         Column(
                           children: const [
-                            Icon(Icons.verified_user, color: Colors.greenAccent),
+                            Icon(Icons.verified_user,
+                                color: Colors.green),
                             SizedBox(height: 4),
                             Text(
                               "Verified",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.greenAccent,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.2),
+                  )
+                      .animate()
+                      .fadeIn(duration: 400.ms)
+                      .slideX(begin: -0.2),
 
                   const SizedBox(height: 16),
 
@@ -112,7 +121,7 @@ class _DriverPickupVerificationScreenState
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        Icon(Icons.location_on, color: Colors.greenAccent),
+                        Icon(Icons.location_on, color: Colors.green),
                         SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -122,7 +131,7 @@ class _DriverPickupVerificationScreenState
                                 "Pickup Location",
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.black,
+                                  color: Colors.black54,
                                 ),
                               ),
                               SizedBox(height: 4),
@@ -131,7 +140,6 @@ class _DriverPickupVerificationScreenState
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black45,
                                 ),
                               ),
                             ],
@@ -139,7 +147,10 @@ class _DriverPickupVerificationScreenState
                         ),
                       ],
                     ),
-                  ).animate().fadeIn(duration: 500.ms).slideX(begin: 0.2),
+                  )
+                      .animate()
+                      .fadeIn(duration: 400.ms)
+                      .slideX(begin: 0.2),
 
                   const SizedBox(height: 16),
 
@@ -153,22 +164,33 @@ class _DriverPickupVerificationScreenState
                         _TripStat(title: "Payment", value: "Cash"),
                       ],
                     ),
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+                  )
+                      .animate()
+                      .fadeIn(duration: 400.ms)
+                      .slideY(begin: 0.1),
 
                   const SizedBox(height: 30),
 
                   const Text(
                     "Enter Trip OTP",
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                      .animate()
+                      .fadeIn()
+                      .slideY(begin: 0.2),
+
                   const SizedBox(height: 6),
+
                   const Text(
                     "Ask passenger for the OTP to start trip",
-                    style: TextStyle(color: Colors.white70),
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                    style: TextStyle(color: Colors.black54),
+                  )
+                      .animate()
+                      .fadeIn()
+                      .slideY(begin: 0.2),
 
                   const SizedBox(height: 24),
 
@@ -184,20 +206,25 @@ class _DriverPickupVerificationScreenState
                         fontSize: 26,
                         letterSpacing: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
                       decoration: InputDecoration(
                         counterText: "",
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: Colors.white,
                         hintText: "• • • •",
-                        hintStyle: const TextStyle(color: Colors.white54),
+                        hintStyle:
+                        const TextStyle(color: Colors.black38),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
+                          borderSide:
+                          BorderSide(color: Colors.grey.shade300),
                         ),
                       ),
                     ),
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                  )
+                      .animate()
+                      .fadeIn()
+                      .slideY(begin: 0.2),
 
                   const SizedBox(height: 12),
 
@@ -210,21 +237,27 @@ class _DriverPickupVerificationScreenState
                     ),
                     child: Row(
                       children: const [
-                        Icon(Icons.security, color: Colors.orangeAccent),
+                        Icon(Icons.security, color: Colors.orange),
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             "For your safety, never start the trip without OTP verification.",
-                            style: TextStyle(fontSize: 13, color: Colors.white70),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                  )
+                      .animate()
+                      .fadeIn()
+                      .slideY(begin: 0.2),
 
                   const SizedBox(height: 20),
 
-                  /// 🚨 LAST ROW EMERGENCY ICONS
+                  /// 🚨 EMERGENCY ACTIONS
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -236,12 +269,15 @@ class _DriverPickupVerificationScreenState
                       ),
                       _BottomEmergencyIcon(
                         icon: Icons.support_agent,
-                        label: "Emergency\nTRYDE",
+                        label: "Emergency\nCAB BANDHU",
                         color: Colors.blueAccent,
                         onTap: () {},
                       ),
                     ],
-                  ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                  )
+                      .animate()
+                      .fadeIn()
+                      .slideY(begin: 0.2),
                 ],
               ),
             ),
@@ -250,14 +286,15 @@ class _DriverPickupVerificationScreenState
           /// 🔘 BOTTOM BUTTON
           Container(
             padding: const EdgeInsets.all(16),
-            color: Colors.grey.shade900,
+            color: Colors.white,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
+                backgroundColor: AppColors.ridePrimary,
                 minimumSize: const Size(double.infinity, 54),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                elevation: 4,
               ),
               onPressed: _verifyOtp,
               child: const Text(
@@ -268,11 +305,17 @@ class _DriverPickupVerificationScreenState
                   color: Colors.black,
                 ),
               ),
-            ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+            )
+                .animate()
+                .fadeIn()
+                .slideY(begin: 0.2),
           ),
         ],
       ),
-    ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1); // Screen entry
+    )
+        .animate()
+        .fadeIn(duration: 350.ms)
+        .slideY(begin: 0.1);
   }
 
   Widget _card({required Widget child}) {
@@ -280,13 +323,13 @@ class _DriverPickupVerificationScreenState
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50, // Dark card
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -295,7 +338,7 @@ class _DriverPickupVerificationScreenState
   }
 }
 
-/// 🚨 BOTTOM EMERGENCY ICON
+/// 🚨 EMERGENCY ICON
 class _BottomEmergencyIcon extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -313,6 +356,7 @@ class _BottomEmergencyIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(40),
       child: Column(
         children: [
           CircleAvatar(
@@ -347,18 +391,25 @@ class _TripStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(title, style: const TextStyle(fontSize: 12, color: Colors.black)),
+        Text(
+          title,
+          style:
+          const TextStyle(fontSize: 12, color: Colors.black54),
+        ),
         const SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black45),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
   }
 }
 
-/// 🌟 CUSTOM PAGE TRANSITION
+/// 🚀 PAGE TRANSITION
 Route _slideRoute(Widget page) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 400),

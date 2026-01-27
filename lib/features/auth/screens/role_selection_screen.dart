@@ -45,6 +45,7 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
     final h = MediaQuery.of(context).size.height;
 
     return Container(
+
       height: h * 0.6,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),

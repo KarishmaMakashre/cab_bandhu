@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'eleven.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,7 +9,7 @@ class EarningsUpdatedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: const Color(0xFFF9FAFB), // 🌤 LIGHT BACKGROUND
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -17,11 +18,23 @@ class EarningsUpdatedScreen extends StatelessWidget {
             children: [
 
               /// 🏦 Wallet Icon
-              const Icon(Icons.account_balance_wallet,
-                  size: 80, color: Colors.green)
-                  .animate().fadeIn(duration: 400.ms).slideY(begin: -0.2),
+              Container(
+                padding: const EdgeInsets.all(22),
+                decoration: BoxDecoration(
+                  color: AppColors.ridePrimary.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.account_balance_wallet,
+                  size: 48,
+                  color: AppColors.ridePrimary,
+                ),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: -0.2),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               /// 💰 Earnings Text
               const Text(
@@ -30,11 +43,27 @@ class EarningsUpdatedScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // WHITE TEXT
+                  color: Colors.black87,
                 ),
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: -0.1),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
+
+              const Text(
+                "Your wallet balance has been updated",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              )
+                  .animate()
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: -0.1),
+
+              const SizedBox(height: 36),
 
               /// ✅ View Trip History Button
               SizedBox(
@@ -42,7 +71,8 @@ class EarningsUpdatedScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent, // Visible button
+                    backgroundColor: AppColors.ridePrimary,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -58,12 +88,15 @@ class EarningsUpdatedScreen extends StatelessWidget {
                   child: const Text(
                     "View Trip History",
                     style: TextStyle(
-                      color: Colors.black, // BLACK BUTTON TEXT
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .slideY(begin: 0.1),
               ),
             ],
           ),

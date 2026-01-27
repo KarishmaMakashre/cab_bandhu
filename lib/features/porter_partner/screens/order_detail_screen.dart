@@ -20,12 +20,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     super.initState();
     _initializeVideos();
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _animationController.forward();
+    AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
+      ..forward();
   }
 
   void _initializeVideos() {
-    final List<String> videoPaths = [
+    final videoPaths = [
       'assets/goods/video1.mp4',
       'assets/goods/video2.mp4',
       'assets/goods/video3.mp4',
@@ -53,12 +53,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Order Details', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.black87),
+        title: const Text(
+          'Order Details',
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -86,79 +89,64 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     );
   }
 
+  // ------------------ Animation ------------------
+
   Widget _animatedFadeSlide(Widget child, {int delay = 0}) {
     return FadeTransition(
       opacity: CurvedAnimation(
         parent: _animationController,
-        curve: Interval(
-          delay / 1000,
-          1.0,
-          curve: Curves.easeOut,
-        ),
+        curve: Interval(delay / 1000, 1.0),
       ),
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+        position: Tween(begin: const Offset(0, 0.1), end: Offset.zero)
             .animate(CurvedAnimation(
           parent: _animationController,
-          curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
+          curve: Interval(delay / 1000, 1.0),
         )),
         child: child,
       ),
     );
   }
 
-  Widget _goodsImages() {
-    final List<String> goodsImagePaths = [
-      // 'assets/goods/image1.avif',
-      'assets/goods/image2.jpg',
-      'assets/goods/image3.webp',
-      'assets/goods/image2.jpg',
-      'assets/goods/image3.webp',
+  // ------------------ UI ------------------
 
-      // 'assets/goods/image4.avif',
+  Widget _goodsImages() {
+    final images = [
+      'assets/goods/image2.jpg',
+      'assets/goods/image3.webp',
+      'assets/goods/image2.jpg',
+      'assets/goods/image3.webp',
     ];
 
     return SizedBox(
       height: 160,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: goodsImagePaths.length,
-        itemBuilder: (context, index) => _imageItem(goodsImagePaths[index], index),
-      ),
-    );
-  }
-
-  Widget _imageItem(String assetPath, int index) {
-    // Alternate colors for images' background
-    final bgColors = [
-      Colors.grey.shade800,
-      Colors.yellow.shade700,
-      Colors.greenAccent.shade400,
-      Colors.blueGrey.shade700
-    ];
-    return Container(
-      width: 160,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: bgColors[index % bgColors.length],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.asset(assetPath, width: 160, height: 160, fit: BoxFit.cover),
+        itemCount: images.length,
+        itemBuilder: (_, i) => Container(
+          width: 160,
+          margin: const EdgeInsets.only(right: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: const [
+              BoxShadow(color: Colors.black12, blurRadius: 8),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.asset(images[i], fit: BoxFit.cover),
+          ),
+        ),
       ),
     );
   }
 
   Widget _goodsInfo() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.grey.shade900),
-      child: Column(
+    return _card(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Goods Details',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          _title('Goods Details'),
           const SizedBox(height: 12),
           _infoRow('Height', '4 ft'),
           _infoRow('Width', '3 ft'),
@@ -169,17 +157,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   Widget _description() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.orange.shade900),
-      child: const Column(
+    return _card(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Description', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        children: const [
+          Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           Text(
             'House shifting goods including bed, table, chairs and kitchen items. Handle with care.',
-            style: TextStyle(color: Colors.white70),
+            style: TextStyle(color: Colors.black54),
           ),
         ],
       ),
@@ -187,19 +173,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   Widget _locationCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.green.shade900),
-      child: Column(
+    return _card(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
-          Text('Locations', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          Text('Locations', style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 12),
           Row(
             children: [
-              Icon(Icons.my_location, color: Colors.greenAccent),
+              Icon(Icons.my_location, color: Colors.green),
               SizedBox(width: 8),
-              Expanded(child: Text('Vijay Nagar, Indore', style: TextStyle(color: Colors.white))),
+              Expanded(child: Text('Vijay Nagar, Indore')),
             ],
           ),
           SizedBox(height: 10),
@@ -207,7 +191,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             children: [
               Icon(Icons.location_on, color: Colors.redAccent),
               SizedBox(width: 8),
-              Expanded(child: Text('MP Nagar, Bhopal', style: TextStyle(color: Colors.white))),
+              Expanded(child: Text('MP Nagar, Bhopal')),
             ],
           ),
         ],
@@ -216,67 +200,59 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   Widget _ownerDetails() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.grey.shade800),
-      child: Row(
+    return _card(
+      Row(
         children: [
-          const CircleAvatar(radius: 24, child: Icon(Icons.person, color: Colors.white)),
+          const CircleAvatar(radius: 24, child: Icon(Icons.person)),
           const SizedBox(width: 12),
           const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Rahul Sharma', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('Goods Owner', style: TextStyle(color: Colors.white70)),
+                Text('Rahul Sharma', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('Goods Owner', style: TextStyle(color: Colors.black54)),
               ],
             ),
           ),
-          IconButton(icon: const Icon(Icons.call, color: Colors.greenAccent), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.call, color: Colors.green),
+            onPressed: () {},
+          ),
         ],
       ),
     );
   }
 
   Widget _pickupTime() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.blueGrey.shade900),
-      child: const Row(
+    return _card(
+      const Row(
         children: [
-          Icon(Icons.access_time, color: Colors.orangeAccent),
+          Icon(Icons.access_time, color: Colors.orange),
           SizedBox(width: 10),
           Text('Pickup Time: 22 Dec, 10:30 AM',
-              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
+              style: TextStyle(fontWeight: FontWeight.w500)),
         ],
       ),
     );
   }
 
   Widget _videoSection() {
-    if (_videoControllers.isEmpty || _videoControllers.every((c) => !c.value.isInitialized)) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: _cardDecoration(color: Colors.grey.shade900),
-        child: const Center(child: CircularProgressIndicator()),
-      );
+    if (_videoControllers.any((c) => !c.value.isInitialized)) {
+      return _card(const Center(child: CircularProgressIndicator()));
     }
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _cardDecoration(color: Colors.grey.shade800),
-      child: Column(
+    return _card(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Goods Videos (4 Videos)',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          _title('Goods Videos (4 Videos)'),
           const SizedBox(height: 12),
           SizedBox(
             height: 180,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _videoControllers.length,
-              itemBuilder: (context, index) => _videoItem(_videoControllers[index], index),
+              itemBuilder: (_, i) => _videoItem(_videoControllers[i], i),
             ),
           ),
         ],
@@ -291,8 +267,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       child: GestureDetector(
         onTap: () {
           setState(() {
-            if (controller.value.isPlaying) controller.pause();
-            else controller.play();
+            controller.value.isPlaying ? controller.pause() : controller.play();
           });
         },
         child: Stack(
@@ -300,22 +275,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: AspectRatio(aspectRatio: controller.value.aspectRatio, child: VideoPlayer(controller)),
+              child: AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: VideoPlayer(controller),
+              ),
             ),
             if (!controller.value.isPlaying)
-              Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.black26),
-                child: const Icon(Icons.play_circle_fill, size: 64, color: Colors.white),
-              ),
-            Positioned(
-              bottom: 4,
-              right: 4,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(4)),
-                child: Text('Video ${index + 1}', style: const TextStyle(color: Colors.white, fontSize: 10)),
-              ),
-            ),
+              const Icon(Icons.play_circle_fill, size: 60, color: Colors.white),
           ],
         ),
       ),
@@ -340,12 +306,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const PickupVerificationMapScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const PickupVerificationMapScreen()),
+              );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.greenAccent,
+              backgroundColor: AppColors.ridePrimary,
               padding: const EdgeInsets.symmetric(vertical: 14),
-              foregroundColor: Colors.black,
             ),
             child: const Text('Accept Order'),
           ),
@@ -354,13 +323,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     );
   }
 
-  BoxDecoration _cardDecoration({Color color = Colors.grey}) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.grey.shade700),
-      color: color,
+  // ------------------ Helpers ------------------
+
+  Widget _card(Widget child) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 10),
+        ],
+      ),
+      child: child,
     );
   }
+
+  Widget _title(String t) =>
+      Text(t, style: const TextStyle(fontWeight: FontWeight.bold));
 
   Widget _infoRow(String t, String v) {
     return Padding(
@@ -368,8 +348,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(t, style: const TextStyle(color: Colors.white70)),
-          Text(v, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white)),
+          Text(t, style: const TextStyle(color: Colors.black54)),
+          Text(v, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),
     );

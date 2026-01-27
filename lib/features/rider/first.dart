@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:cab_bandhu/features/rider/second.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'custom_app_bar.dart';
+import 'second.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool hasRideRequest = true;
 
   final List<String> adsImages = [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSXIXtIUUQHSI5SWYvD9a830k84jiX23Yplw&s",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113",
   ];
 
   @override
@@ -32,34 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
     final shown = prefs.getBool('caution_shown') ?? false;
 
     if (!shown) {
-      Future.delayed(Duration.zero, () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
           barrierDismissible: false,
           builder: (_) => AlertDialog(
-            backgroundColor: Colors.grey[900],
-            title: const Text(
-              "⚠️ Important Instructions",
-              style: TextStyle(color: Colors.white),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Text(
+              "Important Instructions",
+              style: GoogleFonts.inter(fontWeight: FontWeight.w700),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("• Location access is required",
-                    style: TextStyle(color: Colors.white70)),
-                Text("• Background tracking used during trips",
-                    style: TextStyle(color: Colors.white70)),
-                Text("• Follow pickup & drop rules",
-                    style: TextStyle(color: Colors.white70)),
-                SizedBox(height: 10),
-                Text(
-                  "🔗 Terms & Conditions",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
+              children: [
+                _bullet("Location access is required"),
+                _bullet("Background tracking during trips"),
+                _bullet("Follow pickup & drop rules"),
               ],
             ),
             actions: [
@@ -68,7 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   await prefs.setBool('caution_shown', true);
                   Navigator.pop(context);
                 },
-                child: const Text("Agree & Continue"),
+                child: Text(
+                  "Agree & Continue",
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                ),
               )
             ],
           ),
@@ -77,10 +72,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Widget _bullet(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text("• $text", style: GoogleFonts.inter()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xffF4F6FA),
       appBar: CustomHomeAppBar(
         onDutyChanged: (value) {
           setState(() {
@@ -90,92 +92,84 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Today's performance",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _statsRow(),
 
-              const SizedBox(height: 10),
+            const SizedBox(height: 22),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: _statCard(
-                      title: "Today Earnings",
-                      value: "₹ 1,250",
-                      icon: Icons.account_balance_wallet,
-                      color: const Color(0xff8BE98E),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _statCard(
-                      title: "Trips",
-                      value: "8",
-                      icon: Icons.route,
-                      color: const Color(0xffF7C846),
-                    ),
-                  ),
-                ],
+            if (isOnline && hasRideRequest)
+              _incomingRideCard()
+                  .animate()
+                  .fadeIn()
+                  .slideY(begin: 0.3),
+
+            const SizedBox(height: 26),
+
+            _offersSection(),
+
+            const SizedBox(height: 20),
+
+            Text(
+              "Driver Mode Active",
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: Colors.black54,
+                fontWeight: FontWeight.w600,
               ),
-
-              const SizedBox(height: 16),
-
-              if (isOnline && hasRideRequest) _incomingRideCard(),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Offers & Rewards",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              ImageAdsBanner(adsImages: adsImages),
-
-              const SizedBox(height: 12),
-
-              const Text(
-                "Porter Driver Mode",
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// ================= INCOMING RIDE CARD =================
+
+  /// ================= STATS =================
+  Widget _statsRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: _statCard(
+            title: "Earnings",
+            value: "₹1,250",
+            icon: Icons.account_balance_wallet,
+            gradient: const [Color(0xff43CEA2), Color(0xff185A9D)],
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: _statCard(
+            title: "Trips",
+            value: "8",
+            icon: Icons.route,
+            gradient: const [Color(0xffF7971E), Color(0xffFFD200)],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// ================= INCOMING RIDE =================
   Widget _incomingRideCard() {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xffEFFAED),
+            Color(0xffffffff),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
           ),
         ],
       ),
@@ -185,67 +179,46 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Incoming Ride",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                child: const Text(
+                child: Text(
                   "00:25",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     color: Colors.red,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 14),
-
-          Row(
-            children: const [
-              Icon(Icons.notifications_active,
-                  color: Colors.green, size: 18),
-              SizedBox(width: 8),
-              Text(
-                "New Ride Request",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 14),
+          const SizedBox(height: 18),
 
           _locationRow(
-            icon: Icons.radio_button_checked,
+            icon: Icons.my_location,
             value: "Bhopal Railway Station",
             color: Colors.green,
           ),
-
-          const SizedBox(height: 10),
-
+          const SizedBox(height: 12),
           _locationRow(
             icon: Icons.location_on,
             value: "MP Nagar Zone 2",
             color: Colors.redAccent,
           ),
 
-          const Divider(height: 28, color: Colors.black12),
+          const Divider(height: 32),
 
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,24 +229,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 22),
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    side: const BorderSide(color: Colors.red),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 14),
-                  ),
                   onPressed: () =>
                       setState(() => hasRideRequest = false),
-                  child: const Text("Reject"),
+                  child: Text(
+                    "Reject",
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
               const SizedBox(width: 14),
@@ -281,18 +248,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 14),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_)=> DriverRideAcceptedScreen()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                        const DriverRideAcceptedScreen(),
+                      ),
+                    );
                   },
-                  child: const Text(
+                  child: Text(
                     "Accept Ride",
-                    style: TextStyle(color: Colors.white),
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -315,13 +286,30 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  /// ================= OFFERS =================
+  Widget _offersSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Offers & Rewards",
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ImageAdsBanner(adsImages: adsImages),
       ],
     );
   }
@@ -332,42 +320,60 @@ Widget _statCard({
   required String title,
   required String value,
   required IconData icon,
-  required Color color,
+  required List<Color> gradient,
+  String? bgImage, // 👈 optional image
 }) {
   return Container(
     height: 120,
     decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(18),
-      boxShadow: [
-        BoxShadow(
-          color: color.withOpacity(0.5),
-          blurRadius: 10,
-          offset: const Offset(0, 5),
-        ),
-      ],
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: gradient,
+      ),
+      borderRadius: BorderRadius.circular(22),
     ),
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    child: Stack(
       children: [
-        Icon(icon, color: Colors.black, size: 26),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+        /// 🔹 Background Image (Bottom Right)
+        if (bgImage != null)
+          Positioned(
+            bottom: -10,
+            right: -10,
+            child: Opacity(
+              opacity: 0.18, // watermark effect
+              child: Image.asset(
+                bgImage,
+                height: 80,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
+
+        /// 🔹 Main Content
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: Colors.white),
+              const Spacer(),
+              Text(
+                value,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -375,55 +381,53 @@ Widget _statCard({
   );
 }
 
+
 /// ================= IMAGE ADS =================
 class ImageAdsBanner extends StatelessWidget {
   final List<String> adsImages;
-  final double height;
 
-  const ImageAdsBanner({
-    super.key,
-    required this.adsImages,
-    this.height = 170,
-  });
+  const ImageAdsBanner({super.key, required this.adsImages});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(adsImages.first, fit: BoxFit.cover),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.6),
-                    Colors.transparent,
-                  ],
-                ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(22),
+      child: Stack(
+        children: [
+          Image.network(
+            adsImages.first,
+            height: 170,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            height: 170,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(0.6),
+                  Colors.transparent,
+                ],
               ),
             ),
-            const Positioned(
-              bottom: 12,
-              left: 0,
-              right: 0,
-              child: Text(
-                "Complete more trips & earn bonus 🚀",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: Text(
+              "Complete more trips & earn bonus 🚀",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -440,20 +444,17 @@ class _InfoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.black54,
-          ),
-        ),
+        Text(title,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              color: Colors.black54,
+            )),
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: GoogleFonts.inter(
             fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ],

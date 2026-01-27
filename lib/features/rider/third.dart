@@ -1,3 +1,4 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -9,49 +10,55 @@ class DriverNavigatePickupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // DARK BACKGROUND
+      backgroundColor: const Color(0xffF6F7FB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           "Navigate to Pickup",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
           /// 🗺️ MAP VIEW
           Expanded(
             child: Container(
-              color: Colors.grey.shade900, // dark map background
+              color: Colors.grey.shade300, // light map placeholder
               child: const Center(
                 child: Text(
                   "Google Map View",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white70,
+                    color: Colors.black54,
                   ),
                 ),
               ),
-            ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.1),
+            )
+                .animate()
+                .fadeIn(duration: 500.ms)
+                .slideY(begin: -0.1),
           ),
 
           /// 🚕 BOTTOM INFO PANEL
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade200, // DARK PANEL
+              color: Colors.white,
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
+                top: Radius.circular(22),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, -4),
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 18,
+                  offset: const Offset(0, -6),
                 ),
               ],
             ),
@@ -77,44 +84,49 @@ class DriverNavigatePickupScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
                             ),
                           ),
                           SizedBox(height: 4),
                           Text(
                             "Pickup: Airport Road",
-                            style: TextStyle(color: Colors.black45),
+                            style: TextStyle(color: Colors.black54),
                           ),
                         ],
                       ),
                     ),
 
                     IconButton(
-                      icon: const Icon(Icons.call, color: Colors.greenAccent),
+                      icon: const Icon(Icons.call, color: Colors.green),
                       onPressed: () {},
                     ),
                     IconButton(
-                      icon: const Icon(Icons.chat, color: Colors.blueAccent),
+                      icon: const Icon(Icons.chat, color: Colors.blue),
                       onPressed: () {},
                     ),
                   ],
-                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
+                )
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .slideX(begin: -0.2),
 
                 const SizedBox(height: 16),
 
                 /// 🚦 ARRIVED BUTTON
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: AppColors.ridePrimary,
                     minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: 4,
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      _slideRoute(const DriverPickupVerificationScreen()),
+                      _slideRoute(
+                        const DriverPickupVerificationScreen(),
+                      ),
                     );
                   },
                   child: const Text(
@@ -125,19 +137,28 @@ class DriverNavigatePickupScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .slideY(begin: 0.2),
 
                 const SizedBox(height: 8),
               ],
             ),
-          ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+          )
+              .animate()
+              .fadeIn(duration: 500.ms)
+              .slideY(begin: 0.1),
         ],
       ),
-    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1);
+    )
+        .animate()
+        .fadeIn(duration: 350.ms)
+        .slideY(begin: 0.1);
   }
 }
 
-/// 🌟 CUSTOM PAGE TRANSITION
+/// 🚀 PAGE TRANSITION
 Route _slideRoute(Widget page) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 400),
