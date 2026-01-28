@@ -34,12 +34,14 @@ class MyApp extends StatelessWidget {
     return Consumer2<LocaleProvider, ThemeProvider>(
       builder: (context, localeProvider, themeProvider, _) {
         return ScreenUtilInit(
-          designSize: const Size(375, 812),
+          designSize: const Size(375, 812), // 👈 Figma / XD size
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (_, child) {
+
+          /// ✅ IMPORTANT
+          builder: (context, child) {
             return MaterialApp(
-              restorationScopeId:"app",
+              restorationScopeId: 'app',
               debugShowCheckedModeBanner: false,
               title: "Cab Bandhu",
 
@@ -59,6 +61,7 @@ class MyApp extends StatelessWidget {
                 textTheme: GoogleFonts.poppinsTextTheme(
                   Theme.of(context).textTheme,
                 ),
+                useMaterial3: false,
               ),
               darkTheme: ThemeData.dark().copyWith(
                 textTheme: GoogleFonts.poppinsTextTheme(
@@ -66,10 +69,13 @@ class MyApp extends StatelessWidget {
                 ),
               ),
 
-              /// 🚀 First screen
-              home: const SplashFirstScreen(),
+              /// 🚀 First Screen
+              home: child ?? const SplashFirstScreen(),
             );
           },
+
+          /// 👇 ScreenUtil child (IMPORTANT)
+          child: const SplashFirstScreen(),
         );
       },
     );

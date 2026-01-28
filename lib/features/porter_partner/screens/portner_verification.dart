@@ -76,7 +76,9 @@ class _PickupVerificationMapScreenState
                 backgroundColor: Colors.white,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () => context.pop(),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ),
