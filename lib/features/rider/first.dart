@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,42 +82,61 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF4F6FA),
-      appBar: CustomHomeAppBar(
-        onDutyChanged: (value) {
-          setState(() {
-            isOnline = value;
-            hasRideRequest = value;
-          });
-        },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.white, // ✅ white status bar
+        statusBarIconBrightness: Brightness.dark, // ✅ black icons (Android)
+        statusBarBrightness: Brightness.light, // ✅ black icons (iOS)
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // important
+        appBar: CustomHomeAppBar(
+          onDutyChanged: (value) {
+            setState(() {
+              isOnline = value;
+              hasRideRequest = value;
+            });
+          },
+        ),
+        body: Stack(
           children: [
-            _statsRow(),
+            /// 🔹 BACKGROUND IMAGE
+            Positioned.fill(
+              child: Image.asset(
+                "assets/images/backgroundImg.jpeg", // 👈 your bg image
+                fit: BoxFit.cover,
+              ),
+            ),
 
-            const SizedBox(height: 22),
+            /// 🔹 LIGHT OVERLAY (optional but recommended)
+            Positioned.fill(
+              child: Container(
+                color: Colors.white.withOpacity(0.85),
+              ),
+            ),
 
-            if (isOnline && hasRideRequest)
-              _incomingRideCard()
-                  .animate()
-                  .fadeIn()
-                  .slideY(begin: 0.3),
+            /// 🔹 ORIGINAL CONTENT (UNCHANGED)
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _statsRow(),
 
-            const SizedBox(height: 26),
+                  const SizedBox(height: 22),
 
-            _offersSection(),
+                  if (isOnline && hasRideRequest)
+                    _incomingRideCard()
+                        .animate()
+                        .fadeIn()
+                        .slideY(begin: 0.3),
 
-            const SizedBox(height: 20),
+                  const SizedBox(height: 26),
 
-            Text(
-              "Driver Mode Active",
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: Colors.black54,
-                fontWeight: FontWeight.w600,
+                  _offersSection(),
+
+                  const SizedBox(height: 20),
+
+                ],
               ),
             ),
           ],
@@ -184,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
+                  color: Colors.black
                 ),
               ),
               Container(
@@ -209,13 +230,13 @@ class _HomeScreenState extends State<HomeScreen> {
           _locationRow(
             icon: Icons.my_location,
             value: "Bhopal Railway Station",
-            color: Colors.green,
+            color: Colors.black,
           ),
           const SizedBox(height: 12),
           _locationRow(
             icon: Icons.location_on,
             value: "MP Nagar Zone 2",
-            color: Colors.redAccent,
+            color: Colors.black,
           ),
 
           const Divider(height: 32),
@@ -239,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       setState(() => hasRideRequest = false),
                   child: Text(
                     "Reject",
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600,color: Colors.black, fontSize: 12),
                   ),
                 ),
               ),
@@ -263,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
+                      fontSize: 12
                     ),
                   ),
                 ),
@@ -289,6 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w600,
+              color: Colors.black45
             ),
           ),
         ),
@@ -306,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w700,
+            color: Colors.black
           ),
         ),
         const SizedBox(height: 12),
@@ -447,14 +471,15 @@ class _InfoTile extends StatelessWidget {
         Text(title,
             style: GoogleFonts.inter(
               fontSize: 12,
-              color: Colors.black54,
+              color: Colors.black45,
             )),
         const SizedBox(height: 4),
         Text(
           value,
           style: GoogleFonts.inter(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w700,
+            color: Colors.black26
           ),
         ),
       ],

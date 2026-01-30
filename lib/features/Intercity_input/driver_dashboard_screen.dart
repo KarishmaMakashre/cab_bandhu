@@ -1,4 +1,6 @@
+import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../rider/custom_app_bar.dart';
@@ -17,45 +19,65 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF4F6FA),
-      appBar: CustomHomeAppBar(
-        onDutyChanged: (value) {
-          setState(() {
-            isOnline = value;
-            hasRideRequest = value; // demo purpose
-          });
-        },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light, // Android → WHITE icons
+        statusBarBrightness: Brightness.dark, // iOS → WHITE icons
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      child: Scaffold(
+        body: Stack(
           children: [
-
-            const SizedBox(height: 12),
-
-            if (isOnline && hasRideRequest)
-              _incomingRideCard()
-                  .animate()
-                  .fadeIn(duration: 300.ms)
-                  .slideY(begin: 0.3),
-
-            const SizedBox(height: 26),
-
-            Text(
-              isOnline ? "Driver Mode Active" : "You are Offline",
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: Colors.black54,
-                fontWeight: FontWeight.w600,
+            /// 🌄 BACKGROUND IMAGE
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/backgroundImg.jpeg',
+                fit: BoxFit.cover,
               ),
+            ),
+
+            /// 🤍 WHITE OVERLAY (TEXT CLEAR)
+            Positioned.fill(
+              child: Container(
+                color: Colors.white.withOpacity(0.88),
+              ),
+            ),
+
+            /// MAIN CONTENT
+            Column(
+              children: [
+                CustomHomeAppBar(
+                  onDutyChanged: (value) {
+                    setState(() {
+                      isOnline = value;
+                      hasRideRequest = value;
+                    });
+                  },
+                ),
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        if (isOnline && hasRideRequest)
+                          _incomingRideCard()
+                              .animate()
+                              .fadeIn(duration: 300.ms)
+                              .slideY(begin: 0.3),
+
+                        const SizedBox(height: 26),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-
 
   /// ================= INCOMING RIDE =================
   Widget _incomingRideCard() {
@@ -66,9 +88,9 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 25,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
@@ -80,10 +102,11 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Incoming Ride",
+                "Incoming Intercity Ride",
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
+                  color: Colors.black
                 ),
               ),
               Container(
@@ -114,22 +137,33 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
           const SizedBox(height: 12),
           _locationRow(
             icon: Icons.location_on,
-            value: "MP Nagar Zone 2",
+            value: "Indore Vijay Nagar",
             color: Colors.redAccent,
           ),
 
           const Divider(height: 32),
 
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _InfoTile(title: "Distance", value: "6.2 km"),
-              _InfoTile(title: "Fare", value: "₹320"),
+            children: const [
+              _InfoTile(title: "Distance", value: "186 km"),
+              _InfoTile(title: "ETA", value: "3h 45m"),
+              _InfoTile(title: "Vehicle", value: "Sedan"),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              _InfoTile(title: "Fare", value: "₹3,200"),
+              _InfoTile(title: "Trip", value: "Intercity"),
               _InfoTile(title: "Payment", value: "Cash"),
             ],
           ),
 
-          const SizedBox(height: 22),
+          const SizedBox(height: 24),
 
           /// Buttons
           Row(
@@ -138,6 +172,10 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                 child: OutlinedButton(
                   onPressed: () =>
                       setState(() => hasRideRequest = false),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                  ),
                   child: Text(
                     "Reject",
                     style: GoogleFonts.inter(fontWeight: FontWeight.w600),
@@ -148,7 +186,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppColors.foodPrimary,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -190,55 +228,13 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
             style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w600,
+              color: Colors.black45
             ),
           ),
         ),
       ],
     );
   }
-}
-
-/// ================= STAT CARD =================
-Widget _statCard({
-  required String title,
-  required String value,
-  required IconData icon,
-  required List<Color> gradient,
-}) {
-  return Container(
-    height: 120,
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: gradient,
-      ),
-      borderRadius: BorderRadius.circular(22),
-    ),
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: Colors.white),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
 /// ================= INFO TILE =================
@@ -255,7 +251,7 @@ class _InfoTile extends StatelessWidget {
         Text(title,
             style: GoogleFonts.inter(
               fontSize: 12,
-              color: Colors.black54,
+              color: Colors.black45,
             )),
         const SizedBox(height: 4),
         Text(

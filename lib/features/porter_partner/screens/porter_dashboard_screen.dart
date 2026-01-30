@@ -1,22 +1,15 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
+import '../../../core/constants/app_constants.dart';
+import '../../../providers/location_provider.dart';
 import '../../rider/custom_app_bar.dart';
+import 'order_detail_screen.dart';
 
-/// ---------------- MOCK PROVIDER ----------------
-class LocationProvider extends ChangeNotifier {
-  String currentAddress = '';
-  Future<void> fetchCurrentLocation() async {
-    await Future.delayed(const Duration(seconds: 1));
-    currentAddress = "Indore, MP";
-    notifyListeners();
-  }
-}
+const Color primaryGreen = Color(0xff43A047);
 
-/// ---------------- MAIN SCREEN ----------------
 class PartnerDashboard extends StatefulWidget {
   const PartnerDashboard({super.key});
 
@@ -25,7 +18,7 @@ class PartnerDashboard extends StatefulWidget {
 }
 
 class _PartnerDashboardState extends State<PartnerDashboard>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   bool isOnline = false;
   Timer? _requestTimer;
   int selectedTab = 0;
@@ -35,7 +28,7 @@ class _PartnerDashboardState extends State<PartnerDashboard>
   final tabs = ['Daily', 'Weekly', 'Monthly'];
 
   final chartData = [
-    [120, 150, 180, 140, 130, 200, 220],
+    [420, 150, 180, 140, 130, 200, 220],
     [500, 620, 580, 700, 650, 720, 800],
     [1200, 1350, 1500, 1450, 1600, 1700, 1800],
   ];
@@ -45,10 +38,9 @@ class _PartnerDashboardState extends State<PartnerDashboard>
   @override
   void initState() {
     super.initState();
-    _chartController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..forward();
+    _chartController =
+    AnimationController(vsync: this, duration: const Duration(milliseconds: 700))
+      ..forward();
   }
 
   void _changeTab(int index) {
@@ -60,6 +52,13 @@ class _PartnerDashboardState extends State<PartnerDashboard>
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+
     return ChangeNotifierProvider(
       create: (_) => LocationProvider(),
       child: Consumer<LocationProvider>(
@@ -72,35 +71,50 @@ class _PartnerDashboardState extends State<PartnerDashboard>
           }
 
           return Scaffold(
-            backgroundColor: const Color(0xffF2F4FA),
             appBar: CustomHomeAppBar(
               onDutyChanged: (value) {
-                setState(() {
-                  isOnline = value;
-                });
+                setState(() => isOnline = value);
               },
             ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _animated(_headerCard()),
-                  const SizedBox(height: 18),
-                  _animated(_infoBanner()),
-                  const SizedBox(height: 18),
-                  _animated(_upcomingOrders()),
-                  const SizedBox(height: 18),
-                  _animated(_withdrawButton()),
-                  const SizedBox(height: 26),
-                  _animated(_tabBar()),
-                  const SizedBox(height: 18),
-                  _animated(_chart()),
-                  const SizedBox(height: 14),
-                  _animated(_monthlyText()),
-                  const SizedBox(height: 14),
-                  _animated(_breakdown()),
-                ],
-              ),
+            drawer: _drawer(locationProvider),
+            body: Stack(
+              children: [
+                /// 🌄 BACKGROUND IMAGE
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/backgroundImg.jpeg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                /// ☁️ LIGHT OVERLAY
+                Positioned.fill(
+                  child: Container(color: Colors.white.withOpacity(0.85)),
+                ),
+
+                /// MAIN CONTENT
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _topStats(),
+                      const SizedBox(height: 16),
+                      _infoBanner(),
+                      const SizedBox(height: 16),
+                      _upcomingOrders(),
+                      const SizedBox(height: 16),
+                      _withdrawButton(),
+                      const SizedBox(height: 24),
+                      _tabWithChart(),
+                      const SizedBox(height: 16),
+                      _monthlyText(),
+                      const SizedBox(height: 16),
+                      _breakdownCard(),
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -108,75 +122,47 @@ class _PartnerDashboardState extends State<PartnerDashboard>
     );
   }
 
-  // ---------------- ANIMATION ----------------
-  Widget _animated(Widget child) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 600),
-      builder: (_, v, __) => Opacity(
-        opacity: v,
-        child: Transform.translate(
-          offset: Offset(0, 30 * (1 - v)),
-          child: child,
-        ),
-      ),
+  // ================= TOP STATS =================
+  Widget _topStats() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+          Text('₹150.00',
+              style: TextStyle(color:Colors.black,fontSize: 24, fontWeight: FontWeight.bold)),
+          Text('Wallet Balance', style: TextStyle(color: Colors.grey)),
+        ]),
+        Column(crossAxisAlignment: CrossAxisAlignment.end, children: const [
+          Text('24',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: primaryGreen)),
+          Text('Total Trips', style: TextStyle(color: Colors.grey)),
+        ]),
+      ],
     );
   }
 
-  // ---------------- UI ----------------
-  Widget _headerCard() {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient:
-        const LinearGradient(colors: [Color(0xff6A11CB), Color(0xff2575FC)]),
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("₹150.00",
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            SizedBox(height: 6),
-            Text("Wallet Balance",
-                style: TextStyle(color: Colors.white70)),
-          ]),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text("24",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            SizedBox(height: 6),
-            Text("Total Trips",
-                style: TextStyle(color: Colors.white70)),
-          ]),
-        ],
-      ),
-    );
-  }
-
+  // ================= INFO BANNER =================
   Widget _infoBanner() {
-    return _glassCard(
-      const Row(
-        children: [
-          Icon(Icons.auto_graph, color: Color(0xff2575FC)),
+    return _whiteCard(
+      Row(
+        children: const [
+          Icon(Icons.auto_graph, color: primaryGreen),
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              "You earned ₹40 extra via smart sharing!",
-              style: TextStyle(fontWeight: FontWeight.w600),
+              'You earned ₹40 extra via smart sharing!',
+              style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black45),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
+  // ================= UPCOMING ORDERS =================
   Widget _upcomingOrders() {
     final orders = [
       {'time': '4:00 PM', 'route': 'Radisson → Dewas', 'earning': '₹320'},
@@ -186,168 +172,242 @@ class _PartnerDashboardState extends State<PartnerDashboard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Upcoming Orders",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text(
+          'Upcoming Orders',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         const SizedBox(height: 12),
-        ...orders.map((o) => Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16)),
-          child: ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Color(0xffEEF3FF),
-              child: Icon(Icons.schedule, color: Color(0xff2575FC)),
+        ...orders.map(
+              (o) => Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
-            title: Text(o['time']!),
-            subtitle: Text(o['route']!),
-            trailing: Text(o['earning']!,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: primaryGreen.withOpacity(0.12),
+                child: const Icon(Icons.schedule, color: primaryGreen),
+              ),
+              title: Text(
+                o['time']!,
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.green)),
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              subtitle: Text(o['route']!),
+              trailing: Text(
+                o['earning']!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: primaryGreen,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const OrderDetailScreen(),
+                  ),
+                );
+              },
+            ),
           ),
-        ))
+        ),
       ],
     );
   }
 
+  // ================= WITHDRAW =================
   Widget _withdrawButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff2575FC),
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      onPressed: () {},
-      child: const Text("WITHDRAW",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-    );
-  }
-
-  Widget _tabBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(tabs.length, (i) {
-        final selected = selectedTab == i;
-        return GestureDetector(
-          onTap: () => _changeTab(i),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            decoration: BoxDecoration(
-              color: selected ? const Color(0xff2575FC) : Colors.transparent,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(
-              tabs[i],
-              style: TextStyle(
-                  color: selected ? Colors.white : Colors.grey,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _chart() {
-    return _glassCard(
-      SizedBox(
-        height: 220,
-        child: AnimatedBuilder(
-          animation: _chartController,
-          builder: (_, __) => BarChart(
-            BarChartData(
-              maxY: 2000,
-              titlesData: FlTitlesData(show: false),
-              borderData: FlBorderData(show: false),
-              barGroups: List.generate(7, (i) {
-                final value =
-                    chartData[selectedTab][i] * _chartController.value;
-                return BarChartGroupData(x: i, barRods: [
-                  BarChartRodData(
-                    toY: value.toDouble(),
-                    width: 16,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xff6A11CB), Color(0xff2575FC)],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  )
-                ]);
-              }),
-            ),
-          ),
+    return SizedBox(
+      width: 160,
+      height: 44,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryGreen,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
+        child: const Text('WITHDRAW',style: TextStyle(color: Colors.white),),
       ),
     );
   }
 
   Widget _monthlyText() {
     return const Text(
-      "Monthly Earnings : ₹1650.50",
+      'Monthly Earnings : ₹1650.50',
       style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Color(0xff2575FC)),
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: primaryGreen,
+      ),
     );
   }
 
-  Widget _breakdown() {
-    return _glassCard(
+  // ================= BREAKDOWN =================
+  Widget _breakdownCard() {
+    return _whiteCard(
       Column(
         children: const [
-          _BreakRow("Trip Earnings", "₹230.50"),
-          _BreakRow("Tips", "₹76.54"),
-          _BreakRow("Rewards", "₹88.50"),
+          _Row('Trip Earnings', '₹230.50'),
+          _Row('Tips', '₹76.54'),
+          _Row('Rewards', '₹88.50'),
         ],
       ),
     );
   }
 
-  Widget _glassCard(Widget child) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(18),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          color: Colors.white.withOpacity(0.8),
-          child: child,
-        ),
+  Widget _whiteCard(Widget child) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  Widget _drawer(LocationProvider provider) {
+    return Drawer(
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: primaryGreen),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 26,
+                  backgroundImage: AssetImage(AppConstants.proterProfilePath),
+                ),
+                const SizedBox(height: 10),
+                const Text('John Doe',
+                    style: TextStyle(color: Colors.white, fontSize: 18)),
+                Text(
+                  provider.currentAddress.isEmpty
+                      ? 'Fetching location...'
+                      : provider.currentAddress,
+                  style: const TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // ---------------- LOGIC ----------------
-  void _startListeningForRequests() {
-    _requestTimer = Timer(const Duration(seconds: 4), () {
-      if (isOnline) {
-        showDialog(
-          context: context,
-          builder: (_) => const AlertDialog(
-            title: Text("New Order 🚚"),
-            content: Text("Pickup: Indore\nDrop: Bhopal\nEarning: ₹320"),
-          ),
-        );
-      }
-    });
-  }
-
-  void _stopListening() => _requestTimer?.cancel();
-
   @override
   void dispose() {
+    _requestTimer?.cancel();
     _chartController.dispose();
-    _stopListening();
     super.dispose();
   }
+
+  Widget _tabWithChart() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 14, 12, 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          /// ================= TABS =================
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(tabs.length, (i) {
+              final selected = selectedTab == i;
+              return GestureDetector(
+                onTap: () => _changeTab(i),
+                child: Column(
+                  children: [
+                    Text(
+                      tabs[i],
+                      style: TextStyle(
+                        color: selected ? primaryGreen : Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      height: 2,
+                      width: selected ? 36 : 0,
+                      color: primaryGreen,
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+
+          const SizedBox(height: 16),
+
+          /// ================= BAR CHART =================
+          SizedBox(
+            height: 220,
+            child: AnimatedBuilder(
+              animation: _chartController,
+              builder: (_, __) => BarChart(
+                BarChartData(
+                  maxY: 400,
+                  borderData: FlBorderData(show: false),
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(show: false),
+                  barGroups: List.generate(7, (i) {
+                    final value =
+                        chartData[selectedTab][i] * _chartController.value;
+                    return BarChartGroupData(
+                      x: i,
+                      barRods: [
+                        BarChartRodData(
+                          toY: value.toDouble(),
+                          width: 16,
+                          color: primaryGreen,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
-/// ---------------- BREAK ROW ----------------
-class _BreakRow extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const _BreakRow(this.title, this.value);
+class _Row extends StatelessWidget {
+  final String t, v;
+  const _Row(this.t, this.v);
 
   @override
   Widget build(BuildContext context) {
@@ -356,11 +416,10 @@ class _BreakRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(color: Colors.grey)),
-          Text(value,
+          Text(t, style: const TextStyle(color: Colors.grey)),
+          Text(v,
               style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff2575FC))),
+                  fontWeight: FontWeight.bold, color: primaryGreen)),
         ],
       ),
     );

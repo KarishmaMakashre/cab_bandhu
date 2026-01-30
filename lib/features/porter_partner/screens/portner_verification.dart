@@ -13,40 +13,24 @@ class PickupVerificationMapScreen extends StatefulWidget {
 }
 
 class _PickupVerificationMapScreenState
-    extends State<PickupVerificationMapScreen>
-    with SingleTickerProviderStateMixin {
+    extends State<PickupVerificationMapScreen> {
   gmaps.GoogleMapController? _mapController;
   final TextEditingController _otpController = TextEditingController();
 
+  // 📍 DEFAULT IND0RE LOCATION
   final gmaps.LatLng pickupLatLng = const gmaps.LatLng(22.719568, 75.857727);
+
   final String pickupAddress = "Vijay Nagar Square, Indore";
+
   final String correctOtp = "1234";
   bool isOtpVerified = false;
-
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController =
-    AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
-      ..forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _otpController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          /// 🌍 Google Map
+          /// 🗺️ GOOGLE MAP
           Positioned.fill(
             child: gmaps.GoogleMap(
               initialCameraPosition: gmaps.CameraPosition(
@@ -68,7 +52,7 @@ class _PickupVerificationMapScreenState
             ),
           ),
 
-          /// 🔙 Back Button
+          /// 🔙 BACK BUTTON
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -76,121 +60,168 @@ class _PickupVerificationMapScreenState
                 backgroundColor: Colors.white,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => context.pop(),
                 ),
               ),
             ),
           ),
 
-          /// ⬆️ Bottom Sheet
+          /// ⬆️ BOTTOM SHEET
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height * 0.58,
               decoration: const BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(color: Colors.black12, blurRadius: 12)
-                ],
+                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 12)],
               ),
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _animatedFadeSlide(_pickupAddressWidget(), delay: 0),
-                    const SizedBox(height: 16),
-                    _animatedFadeSlide(_ownerDetails(), delay: 100),
-                    const SizedBox(height: 16),
-                    _animatedFadeSlide(_otpInput(), delay: 400),
-                    const SizedBox(height: 24),
-                    _animatedFadeSlide(_startRideButton(), delay: 500),
-                  ],
-                ),
+              child: Stack(
+                children: [
+                  /// 🖼️ BACKGROUND IMAGE
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      child: Image.asset(
+                        'assets/images/topHeaderImage.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+
+                  /// 🔲 OVERLAY FOR READABILITY
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.92),
+                        borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(24)),
+                      ),
+                    ),
+                  ),
+
+                  /// 📦 CONTENT
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _pickupAddress(),
+                          const SizedBox(height: 16),
+                          _ownerDetails(),
+                          const SizedBox(height: 16),
+                          _receiverDetails(),
+                          const SizedBox(height: 20),
+                          _goodsSummary(),
+                          const SizedBox(height: 16),
+                          _otpInput(),
+                          const SizedBox(height: 24),
+                          _startRideButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
         ],
       ),
     );
   }
 
-  /// 🔥 Animation Wrapper
-  Widget _animatedFadeSlide(Widget child, {int delay = 0}) {
-    return FadeTransition(
-      opacity: CurvedAnimation(
-        parent: _animationController,
-        curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
-      ),
-      child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.1),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
-          ),
-        ),
-        child: child,
-      ),
-    );
-  }
-
-  Widget _pickupAddressWidget() {
+  /// 📍 PICKUP ADDRESS
+  Widget _pickupAddress() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Icon(Icons.location_on, color: Colors.green),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
             pickupAddress,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
       ],
     );
   }
 
+  /// 👤 OWNER DETAILS
   Widget _ownerDetails() {
-    return _card(
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.green,
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Rahul Sharma',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('Goods Owner',
-                    style: TextStyle(color: Colors.black54)),
-              ],
+    return SizedBox(
+      width: double.infinity, // 🔥 SAME WIDTH
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: _card(),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.primary,
+              child: Icon(Icons.person, color: Colors.white),
             ),
-          ),
-          IconButton(
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rahul Sharma',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('Goods Owner', style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            ),
+            IconButton(
               icon: const Icon(Icons.call, color: Colors.green),
-              onPressed: () {}),
-        ],
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  Widget _goodsSummary() {
+    return SizedBox(
+      width: double.infinity, // 🔥 SAME WIDTH
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: _card(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Goods Summary',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text('• Bed, Table, Chairs'),
+            Text('• Weight: 120 kg'),
+            Text('• Fragile items included'),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /// 🔐 OTP INPUT
   Widget _otpInput() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Enter Pickup OTP',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text(
+          'Enter Pickup OTP',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 10),
         TextField(
           controller: _otpController,
@@ -199,66 +230,158 @@ class _PickupVerificationMapScreenState
           decoration: InputDecoration(
             hintText: '4 Digit OTP',
             counterText: '',
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: _verifyOtp,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.ridePrimary,
+            backgroundColor: AppColors.primary,
             minimumSize: const Size(double.infinity, 46),
           ),
-          child: const Text('Verify OTP', style: TextStyle(color:Colors.white),),
+          child: const Text('Verify OTP'),
         ),
       ],
     );
   }
 
+  /// 🚚 START RIDE
   Widget _startRideButton() {
     return ElevatedButton(
       onPressed: isOtpVerified ? _startRide : null,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.ridePrimary,
+        backgroundColor: AppColors.primary,
+        disabledBackgroundColor: Colors.grey,
         minimumSize: const Size(double.infinity, 54),
       ),
-      child: const Text('START RIDE', style: TextStyle(fontSize: 18, color: Colors.white)),
+      child: const Text('START RIDE', style: TextStyle(fontSize: 18)),
     );
   }
 
+  /// 🔐 OTP LOGIC
   void _verifyOtp() {
     if (_otpController.text == correctOtp) {
       setState(() => isOtpVerified = true);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('OTP Verified ✅')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('OTP Verified ✅')));
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Invalid OTP ❌')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid OTP ❌')));
     }
   }
 
   void _startRide() {
+    // context.pushNamed('track-ride');
+    // context.pushNamed(
+    //   'track-ride',
+    //   extra: {
+    //     'currentLatLng': widget.currentLatLng,
+    //     'destinationLatLng': widget.destinationLatLng,
+    //     'originAddress': widget.originAddress,
+    //     'destinationAddress': widget.destinationAddress,
+    //   },
+    // );
+    // DriverTripInProgressScreen();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const DriverTripInProgressScreen()),
+      MaterialPageRoute(
+        builder: (context) => const DriverTripInProgressScreen(),
+      ),
     );
   }
 
-  Widget _card({required Widget child}) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8),
-        ],
+  BoxDecoration _card() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.grey.shade300),
+      color: Colors.white,
+    );
+  }
+
+  /// 📦 RECEIVER DETAILS
+  final String receiverName = "Amit Verma";
+  final String receiverAddress = "MP Nagar Zone 1, Bhopal";
+  final String receiverMobile = "+91 9876543210";
+
+  void _callReceiver() async {
+    final uri = Uri.parse('tel:$receiverMobile');
+    // use url_launcher package
+  }
+
+  Widget _receiverDetails() {
+    return Material(
+      color: Colors.white, // 🔥 IMPORTANT
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: _card(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Receiver Details',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Colors.orange,
+                  child: Icon(Icons.home, color: Colors.white),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        receiverName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color:
+                          Colors.black, // 🔥 red hata ke test ke liye black
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        receiverAddress,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      Text(
+                        receiverMobile,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.call, color: Colors.green),
+                  onPressed: _callReceiver,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-      child: child,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DriverMenuScreen extends StatefulWidget {
   const DriverMenuScreen({super.key});
@@ -50,176 +51,211 @@ class _DriverMenuScreenState extends State<DriverMenuScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Menu",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
       ),
-      body: Column(
-        children: [
-
-          /// 👤 PROFILE HEADER
-          _animatedFadeSlide(
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 28,
-                    backgroundImage: NetworkImage(
-                      "https://randomuser.me/api/portraits/men/32.jpg",
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Rahul Sharma",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          "Driver Partner",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _actionIcon(
-                    icon: Icons.call,
-                    color: Colors.green,
-                    onTap: () {},
-                  ),
-                  const SizedBox(width: 8),
-                  _actionIcon(
-                    icon: Icons.message,
-                    color: Colors.blue,
-                    onTap: () {},
-                  ),
-                ],
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            /// 🖼 BACKGROUND IMAGE
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/backgroundImg.jpeg',
+                fit: BoxFit.cover,
               ),
             ),
-            delay: 0,
-          ),
 
-          /// 🔹 MENU LIST
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            /// 🌫 SOFT OVERLAY (keeps premium dark-trip feel)
+            Positioned.fill(
+              child: Container(
+                color: Colors.white.withOpacity(0.85),
+              ),
+            ),
+
+            /// 🧱 ORIGINAL UI (UNCHANGED)
+            Column(
               children: [
-                _animatedFadeSlide(
-                  _menuTile(
-                    icon: Icons.person,
-                    title: "My Profile",
-                    subtitle: "View & edit profile details",
-                    iconColor: Colors.indigo,
-                    onTap: () {},
+                AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  title: const Text(
+                    "Menu",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  delay: 100,
+                  centerTitle: true,
+                  iconTheme: const IconThemeData(color: Colors.black),
                 ),
-                _animatedFadeSlide(
-                  _menuTile(
-                    icon: Icons.account_balance_wallet,
-                    title: "Wallet & Earnings",
-                    subtitle: "View balance & payouts",
-                    iconColor: Colors.green,
-                    onTap: () {},
+
+                Expanded(
+                  child: Column(
+                    children: [
+
+                      /// 👤 PROFILE HEADER
+                      _animatedFadeSlide(
+                        Container(
+                          margin: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.06),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 28,
+                                backgroundImage: NetworkImage(
+                                  "https://randomuser.me/api/portraits/men/32.jpg",
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Rahul Sharma",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Driver Partner",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              _actionIcon(
+                                icon: Icons.call,
+                                color: Colors.green,
+                                onTap: () {},
+                              ),
+                              const SizedBox(width: 8),
+                              _actionIcon(
+                                icon: Icons.message,
+                                color: Colors.blue,
+                                onTap: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+                        delay: 0,
+                      ),
+
+                      /// 🔹 MENU LIST
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          children: [
+                            _animatedFadeSlide(
+                              _menuTile(
+                                icon: Icons.person,
+                                title: "My Profile",
+                                subtitle: "View & edit profile details",
+                                iconColor: Colors.indigo,
+                                onTap: () {},
+                              ),
+                              delay: 100,
+                            ),
+                            _animatedFadeSlide(
+                              _menuTile(
+                                icon: Icons.account_balance_wallet,
+                                title: "Wallet & Earnings",
+                                subtitle: "View balance & payouts",
+                                iconColor: Colors.green,
+                                onTap: () {},
+                              ),
+                              delay: 200,
+                            ),
+                            _animatedFadeSlide(
+                              _menuTile(
+                                icon: Icons.history,
+                                title: "Trip History",
+                                subtitle: "Your completed rides",
+                                iconColor: Colors.blueGrey,
+                                onTap: () {},
+                              ),
+                              delay: 300,
+                            ),
+                            _animatedFadeSlide(
+                              _menuTile(
+                                icon: Icons.settings,
+                                title: "Settings",
+                                subtitle: "App preferences & account",
+                                iconColor: Colors.orange,
+                                onTap: () {},
+                              ),
+                              delay: 400,
+                            ),
+                            _animatedFadeSlide(
+                              _menuTile(
+                                icon: Icons.help_outline,
+                                title: "Help & Support",
+                                subtitle: "Get help or contact support",
+                                iconColor: Colors.purple,
+                                onTap: () {},
+                              ),
+                              delay: 500,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// 🔴 LOGOUT
+                      _animatedFadeSlide(
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                              minimumSize:
+                              const Size(double.infinity, 52),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Logout",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        delay: 600,
+                      ),
+                    ],
                   ),
-                  delay: 200,
-                ),
-                _animatedFadeSlide(
-                  _menuTile(
-                    icon: Icons.history,
-                    title: "Trip History",
-                    subtitle: "Your completed rides",
-                    iconColor: Colors.blueGrey,
-                    onTap: () {},
-                  ),
-                  delay: 300,
-                ),
-                _animatedFadeSlide(
-                  _menuTile(
-                    icon: Icons.settings,
-                    title: "Settings",
-                    subtitle: "App preferences & account",
-                    iconColor: Colors.orange,
-                    onTap: () {},
-                  ),
-                  delay: 400,
-                ),
-                _animatedFadeSlide(
-                  _menuTile(
-                    icon: Icons.help_outline,
-                    title: "Help & Support",
-                    subtitle: "Get help or contact support",
-                    iconColor: Colors.purple,
-                    onTap: () {},
-                  ),
-                  delay: 500,
                 ),
               ],
             ),
-          ),
-
-          /// 🔴 LOGOUT
-          _animatedFadeSlide(
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  minimumSize: const Size(double.infinity, 52),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Logout",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            delay: 600,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

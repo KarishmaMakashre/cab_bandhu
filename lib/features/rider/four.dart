@@ -1,6 +1,8 @@
 import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'five.dart'; // DriverTripInProgressScreen
 
@@ -31,8 +33,11 @@ class _DriverPickupVerificationScreenState
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Incorrect OTP. Please verify with passenger."),
+        SnackBar(
+          content: Text(
+            "Incorrect OTP. Please verify with passenger.",
+            style: TextStyle(fontSize: 14.sp),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -41,290 +46,319 @@ class _DriverPickupVerificationScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF6F7FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          "Pickup Verification",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
+          title: Text(
+            "Pickup Verification",
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
         ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  /// 👤 PASSENGER CARD
-                  _card(
-                    child: Row(
+        body: Stack(
+          children: [
+            /// 🌄 BACKGROUND IMAGE
+            Positioned.fill(
+              child: Image.asset(
+                "assets/images/backgroundImg.jpeg",
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            /// 🌫 OVERLAY
+            Positioned.fill(
+              child: Container(
+                color: Colors.white.withOpacity(0.85),
+              ),
+            ),
+
+            /// 🧱 CONTENT
+            Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
                       children: [
-                        const CircleAvatar(
-                          radius: 28,
-                          backgroundImage:
-                          NetworkImage("https://i.pravatar.cc/150?img=3"),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Rahul Sharma",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                        _card(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 28.r,
+                                backgroundImage: const NetworkImage(
+                                  "https://i.pravatar.cc/150?img=3",
                                 ),
                               ),
-                              SizedBox(height: 4),
-                              Text(
-                                "⭐ 4.8 • 52 trips",
-                                style: TextStyle(color: Colors.black54),
+                              SizedBox(width: 14.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Rahul Sharma",
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      "⭐ 4.8 • 52 trips",
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  Icon(Icons.verified_user,
+                                      color: Colors.green, size: 20.sp),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    "Verified",
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ).animate().fadeIn().slideX(begin: -0.2),
+
+                        SizedBox(height: 16.h),
+
+                        _card(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.location_on,
+                                  color: Colors.green, size: 20.sp),
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Pickup Location",
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      "Airport Road, Bhopal (Terminal 2)",
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ).animate().fadeIn().slideX(begin: 0.2),
+
+                        SizedBox(height: 16.h),
+
+                        _card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: const [
+                              _TripStat(title: "Distance", value: "8.4 km"),
+                              _TripStat(title: "Fare", value: "₹320"),
+                              _TripStat(title: "Payment", value: "Cash"),
+                            ],
+                          ),
+                        ).animate().fadeIn().slideY(begin: 0.1),
+
+                        SizedBox(height: 30.h),
+
+                        Text(
+                          "Enter Trip OTP",
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        SizedBox(height: 6.h),
+
+                        Text(
+                          "Ask passenger for the OTP to start trip",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: Colors.black54,
+                          ),
+                        ),
+
+                        SizedBox(height: 24.h),
+
+                        SizedBox(
+                          width: 200.w,
+                          child: TextField(
+                            controller: otpController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            maxLength: 4,
+                            cursorColor: Colors.black, // ✅ BLACK CURSOR
+                            style: TextStyle(
+                              fontSize: 26.sp,
+                              letterSpacing: 14.w,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black, // ✅ BLACK NUMBERS
+                            ),
+                            decoration: InputDecoration(
+                              counterText: "",
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: "• • • •",
+                              hintStyle: TextStyle(
+                                color: Colors.black38,
+                                fontSize: 22.sp,
+                              ),
+
+                              /// 🔲 DEFAULT BORDER
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.r),
+                                borderSide: const BorderSide(
+                                  color: Colors.black, // ✅ BLACK BORDER
+                                  width: 1.4,
+                                ),
+                              ),
+
+                              /// 🔲 FOCUSED BORDER
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.r),
+                                borderSide: const BorderSide(
+                                  color: Colors.black, // ✅ BLACK BORDER
+                                  width: 2,
+                                ),
+                              ),
+
+                              /// 🔲 ERROR BORDER (optional)
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.r),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+
+                        SizedBox(height: 12.h),
+
+                        Container(
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.security,
+                                  color: Colors.orange, size: 20.sp),
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Text(
+                                  "For your safety, never start the trip without OTP verification.",
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black87,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        Column(
-                          children: const [
-                            Icon(Icons.verified_user,
-                                color: Colors.green),
-                            SizedBox(height: 4),
-                            Text(
-                              "Verified",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                              ),
+
+                        SizedBox(height: 20.h),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _BottomEmergencyIcon(
+                              icon: Icons.local_police,
+                              label: "Emergency\nPolice",
+                              color: Colors.redAccent,
+                              onTap: () {},
+                            ),
+                            _BottomEmergencyIcon(
+                              icon: Icons.support_agent,
+                              label: "Emergency\nCAB BANDHU",
+                              color: Colors.blueAccent,
+                              onTap: () {},
                             ),
                           ],
                         ),
                       ],
                     ),
-                  )
-                      .animate()
-                      .fadeIn(duration: 400.ms)
-                      .slideX(begin: -0.2),
+                  ),
+                ),
 
-                  const SizedBox(height: 16),
-
-                  /// 📍 PICKUP LOCATION
-                  _card(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Icon(Icons.location_on, color: Colors.green),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Pickup Location",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "Airport Road, Bhopal (Terminal 2)",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                      .animate()
-                      .fadeIn(duration: 400.ms)
-                      .slideX(begin: 0.2),
-
-                  const SizedBox(height: 16),
-
-                  /// 🚕 TRIP SUMMARY
-                  _card(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        _TripStat(title: "Distance", value: "8.4 km"),
-                        _TripStat(title: "Fare", value: "₹320"),
-                        _TripStat(title: "Payment", value: "Cash"),
-                      ],
-                    ),
-                  )
-                      .animate()
-                      .fadeIn(duration: 400.ms)
-                      .slideY(begin: 0.1),
-
-                  const SizedBox(height: 30),
-
-                  const Text(
-                    "Enter Trip OTP",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                      .animate()
-                      .fadeIn()
-                      .slideY(begin: 0.2),
-
-                  const SizedBox(height: 6),
-
-                  const Text(
-                    "Ask passenger for the OTP to start trip",
-                    style: TextStyle(color: Colors.black54),
-                  )
-                      .animate()
-                      .fadeIn()
-                      .slideY(begin: 0.2),
-
-                  const SizedBox(height: 24),
-
-                  /// 🔢 OTP INPUT
-                  SizedBox(
-                    width: 200,
-                    child: TextField(
-                      controller: otpController,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      maxLength: 4,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        letterSpacing: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        counterText: "",
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "• • • •",
-                        hintStyle:
-                        const TextStyle(color: Colors.black38),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide:
-                          BorderSide(color: Colors.grey.shade300),
-                        ),
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  color: Colors.white,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.ridebtn,
+                      minimumSize: Size(double.infinity, 54.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                     ),
-                  )
-                      .animate()
-                      .fadeIn()
-                      .slideY(begin: 0.2),
-
-                  const SizedBox(height: 12),
-
-                  /// 🛡️ SAFETY NOTE
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.security, color: Colors.orange),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            "For your safety, never start the trip without OTP verification.",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                      .animate()
-                      .fadeIn()
-                      .slideY(begin: 0.2),
-
-                  const SizedBox(height: 20),
-
-                  /// 🚨 EMERGENCY ACTIONS
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _BottomEmergencyIcon(
-                        icon: Icons.local_police,
-                        label: "Emergency\nPolice",
-                        color: Colors.redAccent,
-                        onTap: () {},
+                    onPressed: _verifyOtp,
+                    child: Text(
+                      "Verify OTP & Start Trip",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
                       ),
-                      _BottomEmergencyIcon(
-                        icon: Icons.support_agent,
-                        label: "Emergency\nCAB BANDHU",
-                        color: Colors.blueAccent,
-                        onTap: () {},
-                      ),
-                    ],
-                  )
-                      .animate()
-                      .fadeIn()
-                      .slideY(begin: 0.2),
-                ],
-              ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-
-          /// 🔘 BOTTOM BUTTON
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.ridePrimary,
-                minimumSize: const Size(double.infinity, 54),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 4,
-              ),
-              onPressed: _verifyOtp,
-              child: const Text(
-                "Verify OTP & Start Trip",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            )
-                .animate()
-                .fadeIn()
-                .slideY(begin: 0.2),
-          ),
-        ],
+          ],
+        ),
       ),
-    )
-        .animate()
-        .fadeIn(duration: 350.ms)
-        .slideY(begin: 0.1);
+    );
   }
 
   Widget _card({required Widget child}) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.all(16.w),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -356,21 +390,21 @@ class _BottomEmergencyIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(40),
+      borderRadius: BorderRadius.circular(40.r),
       child: Column(
         children: [
           CircleAvatar(
-            radius: 26,
+            radius: 26.r,
             backgroundColor: color.withOpacity(0.15),
-            child: Icon(icon, color: color, size: 28),
+            child: Icon(icon, color: color, size: 28.sp),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6.h),
           Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),
@@ -393,15 +427,15 @@ class _TripStat extends StatelessWidget {
       children: [
         Text(
           title,
-          style:
-          const TextStyle(fontSize: 12, color: Colors.black54),
+          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6.h),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.black45
           ),
         ),
       ],

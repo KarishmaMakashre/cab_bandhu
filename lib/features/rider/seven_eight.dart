@@ -1,5 +1,6 @@
 import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // ✅ ADDED
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'eight.dart';
@@ -18,8 +19,17 @@ class DriverCollectPaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ ADDED: Status bar config
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB), // 🌤 LIGHT BACKGROUND
+      backgroundColor: Colors.transparent, // ✅ ADDED
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -30,49 +40,69 @@ class DriverCollectPaymentScreen extends StatelessWidget {
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _amountCard().animate().fadeIn().slideY(begin: -0.1),
-            const SizedBox(height: 20),
-            _qrCard().animate().fadeIn().slideY(begin: -0.1),
-            const SizedBox(height: 24),
+      body: Stack( // ✅ ADDED
+        children: [
+          /// 🖼️ BACKGROUND IMAGE
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/backgroundImg.jpeg',
+              fit: BoxFit.cover,
+            ),
+          ),
 
-            /// 💵 COLLECT CASH BUTTON
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.ridePrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+          /// 🌑 SOFT OVERLAY (keeps dark-trip feel)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
+
+          /// ✅ ORIGINAL BODY (UNCHANGED)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                _amountCard().animate().fadeIn().slideY(begin: -0.1),
+                const SizedBox(height: 20),
+                _qrCard().animate().fadeIn().slideY(begin: -0.1),
+                const SizedBox(height: 34),
+
+                /// 💵 COLLECT CASH BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.ridebtn,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: () => _showCashConfirm(context),
+                    child: const Text(
+                      "Collect Cash",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-                onPressed: () => _showCashConfirm(context),
-                child: const Text(
-                  "Collect Cash",
+                ).animate().fadeIn().slideY(begin: 0.1),
+
+                const Spacer(),
+
+                const Text(
+                  "Please collect payment before ending the ride",
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black54,
+                    fontSize: 13,
                   ),
-                ),
-              ),
-            ).animate().fadeIn().slideY(begin: 0.1),
-
-            const Spacer(),
-
-            const Text(
-              "Please collect payment before ending the ride",
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 13,
-              ),
-            ).animate().fadeIn().slideY(begin: 0.1),
-          ],
-        ),
+                ).animate().fadeIn().slideY(begin: 0.1),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

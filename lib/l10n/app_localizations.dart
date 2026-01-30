@@ -108,7 +108,7 @@ abstract class AppLocalizations {
   /// App welcome message
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Tryde!'**
+  /// **'Welcome to Cab Bandhu!'**
   String get welcome;
 }
 

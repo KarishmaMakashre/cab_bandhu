@@ -64,7 +64,7 @@ class CustomHomeAppBar extends StatelessWidget
                       Text(
                         "Ratanlok Colony, Indore",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
                         ),

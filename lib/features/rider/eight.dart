@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // ✅ ADDED
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'nine.dart'; // RatePassengerScreen
@@ -10,6 +11,15 @@ class DriverTripCompletedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ ADDED: Status bar style
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
+
     final double baseFare = 80;
     final double distanceFare = 220;
     final double timeFare = 40;
@@ -17,119 +27,140 @@ class DriverTripCompletedScreen extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB), // 🌤 LIGHT BACKGROUND
+      backgroundColor: Colors.transparent, // ✅ ADDED
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           "Trip Completed",
-          style: TextStyle(color: Colors.black87),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
+      body: Stack( // ✅ ADDED
+        children: [
+          /// 🖼️ BACKGROUND IMAGE
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/backgroundImg.jpeg',
+              fit: BoxFit.cover,
+            ),
+          ),
 
-            /// ✅ CHECK ICON
-            const Icon(
-              Icons.check_circle,
-              size: 80,
-              color: AppColors.ridePrimary,
-            ).animate().fadeIn().slideY(begin: -0.2),
+          /// 🌑 SOFT OVERLAY (keeps trip mood)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
 
-            const SizedBox(height: 10),
+          /// ✅ ORIGINAL BODY (UNCHANGED)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                /// ✅ CHECK ICON
+                const Icon(
+                  Icons.check_circle,
+                  size: 80,
+                  color: AppColors.ridebtn,
+                ).animate().fadeIn().slideY(begin: -0.2),
 
-            /// ✅ COMPLETED TEXT
-            const Text(
-              "Trip Successfully Completed",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ).animate().fadeIn().slideY(begin: -0.1),
+                const SizedBox(height: 10),
 
-            const SizedBox(height: 30),
-
-            /// 💰 FARE DETAILS CARD
-            _card(
-              child: Column(
-                children: [
-                  _fareRow("Base Fare", baseFare),
-                  _fareRow("Distance Fare", distanceFare),
-                  _fareRow("Time Fare", timeFare),
-                  const Divider(),
-                  _fareRow("TOTAL", total, bold: true),
-                ],
-              ),
-            ).animate().fadeIn().slideY(begin: 0.1),
-
-            const SizedBox(height: 24),
-
-            /// 💳 PAYMENT STATUS
-            _paymentStatusCard()
-                .animate()
-                .fadeIn()
-                .slideY(begin: 0.2),
-
-            const SizedBox(height: 24),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                "Offers & Rewards",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ).animate().fadeIn(),
-
-            const SizedBox(height: 10),
-
-            /// 📢 ADS BANNER
-            ImageAdsBanner(
-              height: h * 0.18,
-              adsImages: const [
-                "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-              ],
-            ).animate().fadeIn().scale(begin: const Offset(0.95, 0.95)),
-
-            const Spacer(),
-
-            /// 🚦 RATE BUTTON
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.ridePrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    _slideRoute(const RatePassengerScreen()),
-                  );
-                },
-                child: const Text(
-                  "Rate User",
+                /// ✅ COMPLETED TEXT
+                const Text(
+                  "Trip Successfully Completed",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black87,
                   ),
+                ).animate().fadeIn().slideY(begin: -0.1),
+
+                const SizedBox(height: 30),
+
+                /// 💰 FARE DETAILS CARD
+                _card(
+                  child: Column(
+                    children: [
+                      _fareRow("Base Fare", baseFare),
+                      _fareRow("Distance Fare", distanceFare),
+                      _fareRow("Time Fare", timeFare),
+                      const Divider(),
+                      _fareRow("TOTAL", total, bold: true),
+                    ],
+                  ),
+                ).animate().fadeIn().slideY(begin: 0.1),
+
+                const SizedBox(height: 24),
+
+                /// 💳 PAYMENT STATUS
+                _paymentStatusCard()
+                    .animate()
+                    .fadeIn()
+                    .slideY(begin: 0.2),
+
+                const SizedBox(height: 24),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    "Offers & Rewards",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ).animate().fadeIn(),
+
+                const SizedBox(height: 10),
+
+                /// 📢 ADS BANNER
+                ImageAdsBanner(
+                  height: h * 0.18,
+                  adsImages: const [
+                    "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+                  ],
+                ).animate().fadeIn().scale(
+                  begin: const Offset(0.95, 0.95),
                 ),
-              ),
-            ).animate().fadeIn().slideY(begin: 0.3),
-          ],
-        ),
+
+                const Spacer(),
+
+                /// 🚦 RATE BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.ridebtn,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        _slideRoute(const RatePassengerScreen()),
+                      );
+                    },
+                    child: const Text(
+                      "Rate User",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ).animate().fadeIn().slideY(begin: 0.3),
+              ],
+            ),
+          ),
+        ],
       ),
     ).animate().fadeIn().slideY(begin: 0.1);
   }

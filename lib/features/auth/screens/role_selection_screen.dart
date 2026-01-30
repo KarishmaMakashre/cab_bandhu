@@ -7,7 +7,8 @@ class PartnerTypeBottomSheet extends StatefulWidget {
   const PartnerTypeBottomSheet({super.key});
 
   @override
-  State<PartnerTypeBottomSheet> createState() => _PartnerTypeBottomSheetState();
+  State<PartnerTypeBottomSheet> createState() =>
+      _PartnerTypeBottomSheetState();
 }
 
 class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
@@ -17,48 +18,44 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
     {
       'id': 'rider',
       'title': 'Rider Partner',
-      'subtitle': 'Drive with TRYDE',
+      'subtitle': 'Drive with Cab Bandhu',
       'icon': Icons.directions_car,
-      'color': Color(0xffF5C542), // Gold
+      'color': Color(0xffF5C542),
     },
     {
       'id': 'porter',
       'title': 'Porter Partner',
-      'subtitle': 'Deliver with TRYDE',
+      'subtitle': 'Deliver with Cab Bandhu',
       'icon': Icons.local_shipping,
-      'color': Color(0xff43A047), // Green
+      'color': Color(0xff43A047),
     },
     {
       'id': 'intercity',
       'title': 'Intercity Cab',
       'subtitle': 'Outstation rides',
       'icon': Icons.moped,
-      'color': Color(0xffFF8A65), // Orange
+      'color': Color(0xffFF8A65),
     },
   ];
-
-  final String bgImageUrl =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSXIXtIUUQHSI5SWYvD9a830k84jiX23Yplw&s';
 
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
 
     return Container(
-
       height: h * 0.6,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         image: DecorationImage(
-          image: NetworkImage(bgImageUrl),
+          image: AssetImage('assets/images/backgroundImg.jpeg'),
           fit: BoxFit.cover,
         ),
       ),
       child: Container(
-        // Dark overlay for readability
+        // ✅ light white overlay
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          color: Colors.black.withOpacity(0.55),
+          color: Colors.white.withOpacity(0.85),
         ),
         child: Column(
           children: [
@@ -68,7 +65,7 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
               height: 5,
               width: 50,
               decoration: BoxDecoration(
-                color: Colors.white54,
+                color: Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
@@ -86,30 +83,29 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
+                    icon: const Icon(Icons.close, color: Colors.black54),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 8),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Select how you want to earn with TRYDE',
-                style: TextStyle(fontSize: 14, color: Colors.white60),
+                'Select how you want to earn with Cab Bandhu',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Partner Cards
+            // Partner cards
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -117,9 +113,7 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                 itemBuilder: (_, i) {
                   final item = partners[i];
                   final isSelected = selected == item['id'];
-
-                  // Safe color handling
-                  final cardColor = (item['color'] as Color?) ?? Colors.white;
+                  final cardColor = item['color'] as Color;
 
                   return GestureDetector(
                     onTap: () async {
@@ -142,19 +136,29 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? cardColor.withOpacity(0.2)
-                            : Colors.white10,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isSelected
+                              ? cardColor
+                              : Colors.grey.shade300,
+                          width: isSelected ? 2 : 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
                         children: [
-                          // Icon with colored circle
                           Container(
                             height: 50,
                             width: 50,
                             decoration: BoxDecoration(
-                              color: cardColor.withOpacity(0.2),
+                              color: cardColor.withOpacity(0.15),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -165,7 +169,6 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                           ),
                           const SizedBox(width: 16),
 
-                          // Text
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,34 +178,34 @@ class _PartnerTypeBottomSheetState extends State<PartnerTypeBottomSheet> {
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 Text(
                                   item['subtitle'],
                                   style: const TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white70,
+                                    color: Colors.black54,
                                   ),
                                 ),
                               ],
                             ),
                           ),
 
-                          // Selection check
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: isSelected
-                                ? Icon(Icons.check_circle,
-                                key: const ValueKey('selected'),
-                                color: cardColor)
-                                : const Icon(Icons.circle_outlined,
-                                key: ValueKey('unselected'),
-                                color: Colors.white70),
+                          Icon(
+                            isSelected
+                                ? Icons.check_circle
+                                : Icons.circle_outlined,
+                            color: isSelected
+                                ? cardColor
+                                : Colors.grey,
                           ),
                         ],
                       ),
-                    ).animate().fade(duration: 500.ms).slideX(begin: 0.3),
+                    )
+                        .animate()
+                        .fade(duration: 400.ms)
+                        .slideX(begin: 0.2),
                   );
                 },
               ),

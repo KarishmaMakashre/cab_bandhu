@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
-// import 'package:tryde_partner/core/constants/color_constants.dart';
-// import 'package:tryde_partner/providers/theme_provider.dart';
+// import 'package:Cab Bandhu_partner/core/constants/color_constants.dart';
+// import 'package:Cab Bandhu_partner/providers/theme_provider.dart';
 
 // class ThemeScreen extends StatefulWidget {
 //   const ThemeScreen({super.key});

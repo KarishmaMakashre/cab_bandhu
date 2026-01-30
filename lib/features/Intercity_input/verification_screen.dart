@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/color_constants.dart';
+
 import '../rider/five.dart';
 
 class PickupVerificationMapScreen extends StatefulWidget {
@@ -29,8 +30,8 @@ class _PickupVerificationMapScreenState
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _animationController.forward();
+    AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
+      ..forward();
   }
 
   @override
@@ -42,185 +43,168 @@ class _PickupVerificationMapScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212),
-      body: Stack(
-        children: [
-          // 🌍 Google Map
-          Positioned.fill(
-            child: gmaps.GoogleMap(
-              initialCameraPosition: gmaps.CameraPosition(
-                target: pickupLatLng,
-                zoom: 16,
+    return ScreenUtilInit(
+      designSize: const Size(360, 800),
+      minTextAdapt: true,
+      builder: (_, __) => Scaffold(
+        body: Stack(
+          children: [
+            /// 🌍 GOOGLE MAP
+            Positioned.fill(
+              child: gmaps.GoogleMap(
+                initialCameraPosition: gmaps.CameraPosition(
+                  target: pickupLatLng,
+                  zoom: 16,
+                ),
+                onMapCreated: (c) => _mapController = c,
+                markers: {
+                  gmaps.Marker(
+                    markerId: const gmaps.MarkerId('pickup'),
+                    position: pickupLatLng,
+                  ),
+                },
+                myLocationEnabled: true,
+                zoomControlsEnabled: false,
               ),
-              onMapCreated: (controller) => _mapController = controller,
-              markers: {
-                gmaps.Marker(
-                  markerId: const gmaps.MarkerId('pickup'),
-                  position: pickupLatLng,
-                  icon: gmaps.BitmapDescriptor.defaultMarkerWithHue(
-                    gmaps.BitmapDescriptor.hueGreen,
+            ),
+
+            /// 🔙 BACK BUTTON
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: CircleAvatar(
+                  backgroundColor: Colors.black54,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white, size: 20.sp),
+                    onPressed: () => context.pop(),
                   ),
                 ),
-              },
-              myLocationEnabled: true,
-              zoomControlsEnabled: false,
+              ),
             ),
-          ),
 
-          // 🔙 Back Button
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: CircleAvatar(
-                backgroundColor: Colors.grey.shade800,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => context.pop(),
+            /// ⬆️ BOTTOM SHEET
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 0.58.sh,
+                decoration: BoxDecoration(
+                  borderRadius:
+                  BorderRadius.vertical(top: Radius.circular(24.r)),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/backgroundImg.jpeg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.78),
+                    borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(24.r)),
+                  ),
+                  padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 20.h),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _animated(_pickupAddressWidget(), 0),
+                        16.verticalSpace,
+                        _animated(_ownerDetails(), 100),
+                        16.verticalSpace,
+                        _animated(_receiverDetails(), 200),
+                        16.verticalSpace,
+                        _animated(_goodsSummary(), 300),
+                        16.verticalSpace,
+                        _animated(_otpInput(), 400),
+                        24.verticalSpace,
+                        _animated(_startRideButton(), 500),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-
-          // ⬆️ Bottom Sheet
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.58,
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 12)],
-              ),
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _animatedFadeSlide(_pickupAddressWidget(), delay: 0),
-                    const SizedBox(height: 16),
-                    _animatedFadeSlide(_ownerDetails(), delay: 100),
-                    const SizedBox(height: 16),
-                    _animatedFadeSlide(_receiverDetails(), delay: 200),
-                    const SizedBox(height: 20),
-                    _animatedFadeSlide(_goodsSummary(), delay: 300),
-                    const SizedBox(height: 16),
-                    _animatedFadeSlide(_otpInput(), delay: 400),
-                    const SizedBox(height: 24),
-                    _animatedFadeSlide(_startRideButton(), delay: 500),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _animatedFadeSlide(Widget child, {int delay = 0}) {
+  /// ✨ ANIMATION
+  Widget _animated(Widget child, int delay) {
+    final curve = CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(delay / 1000, 1, curve: Curves.easeOut),
+    );
+
     return FadeTransition(
-      opacity: CurvedAnimation(
-        parent: _animationController,
-        curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
-      ),
+      opacity: curve,
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
-            .animate(CurvedAnimation(
-          parent: _animationController,
-          curve: Interval(delay / 1000, 1.0, curve: Curves.easeOut),
-        )),
+        position:
+        Tween(begin: const Offset(0, 0.1), end: Offset.zero).animate(curve),
         child: child,
       ),
     );
   }
 
+  /// 📍 PICKUP ADDRESS
   Widget _pickupAddressWidget() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.location_on, color: Colors.greenAccent),
-        const SizedBox(width: 10),
+        Icon(Icons.location_on, color: Colors.green, size: 22.sp),
+        8.horizontalSpace,
         Expanded(
           child: Text(
             pickupAddress,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _ownerDetails() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: _card(color: Colors.grey.shade900),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.greenAccent,
-            child: Icon(Icons.person, color: Colors.black),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Rahul Sharma',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('Goods Owner', style: TextStyle(color: Colors.white70)),
-              ],
-            ),
-          ),
-          IconButton(icon: const Icon(Icons.call, color: Colors.greenAccent), onPressed: () {}),
-        ],
+  /// 📦 COMMON CARD
+  Widget _card({required Widget child, required double height}) {
+    return SizedBox(
+      height: height,
+      width: double.infinity, // 🔥 WIDTH FULL
+      child: Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 6.r),
+          ],
+        ),
+        child: child,
       ),
     );
   }
 
-  Widget _receiverDetails() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: _card(color: Colors.blueGrey.shade900),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  /// 👤 OWNER
+  Widget _ownerDetails() {
+    return _card(
+      height: 120.h,
+      child: Row(
         children: [
-          const Text('Receiver Details',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
-          const SizedBox(height: 12),
-          Row(
+          CircleAvatar(
+            radius: 22.r,
+            backgroundColor: Colors.green,
+            child: Icon(Icons.person, color: Colors.white, size: 22.sp),
+          ),
+          12.horizontalSpace,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.orange,
-                child: Icon(Icons.home, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Amit Verma',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: Colors.white)),
-                    const SizedBox(height: 4),
-                    Text('MP Nagar Zone 1, Bhopal',
-                        style: const TextStyle(color: Colors.white70, fontSize: 13)),
-                    const SizedBox(height: 6),
-                    Text('+91 9876543210',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.white, fontSize: 13)),
-                  ],
-                ),
-              ),
-              IconButton(icon: const Icon(Icons.call, color: Colors.greenAccent), onPressed: () {}),
+              Text('Rahul Sharma',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp, color: Colors.black)),
+              Text('Goods Owner',
+                  style: TextStyle(fontSize: 13.sp, color: Colors.black54)),
             ],
           ),
         ],
@@ -228,99 +212,155 @@ class _PickupVerificationMapScreenState
     );
   }
 
-  Widget _goodsSummary() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: _card(color: Colors.green.shade900),
+  /// 🏠 RECEIVER (BIGGER)
+  Widget _receiverDetails() {
+    return _card(
+      height: 140.h, // 🔥 pehle 145.h tha → ab zyada height
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Goods Summary',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
-          SizedBox(height: 8),
-          Text('• Bed, Table, Chairs', style: TextStyle(color: Colors.white70)),
-          Text('• Weight: 120 kg', style: TextStyle(color: Colors.white70)),
-          Text('• Fragile items included', style: TextStyle(color: Colors.white70)),
+        children: [
+          Text(
+            'Receiver Details',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.sp, // thoda bada
+              color: Colors.black
+            ),
+          ),
+          12.verticalSpace, // spacing increased
+          Text('Amit Verma', style: TextStyle(fontSize: 14.sp, color: Colors.black45)),
+          6.verticalSpace,
+          Text(
+            'MP Nagar, Bhopal',
+            style: TextStyle(fontSize: 13.sp, color: Colors.black54),
+          ),
+          6.verticalSpace,
+          Text('+91 9876543210', style: TextStyle(fontSize: 13.sp,color: Colors.black45)),
         ],
       ),
     );
   }
 
-  Widget _otpInput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Enter Pickup OTP',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _otpController,
-          maxLength: 4,
-          keyboardType: TextInputType.number,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: '4 Digit OTP',
-            hintStyle: const TextStyle(color: Colors.white54),
-            counterText: '',
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.white38)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.greenAccent)),
-          ),
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: _verifyOtp,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.greenAccent,
-            minimumSize: const Size(double.infinity, 46),
-            foregroundColor: Colors.black,
-          ),
-          child: const Text('Verify OTP'),
-        ),
-      ],
+  /// 🚚 GOODS (BIGGER)
+  Widget _goodsSummary() {
+    return _card(
+      height: 120.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Goods Summary',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp,color: Colors.black)),
+          8.verticalSpace,
+          Text('• Bed, Table, Chairs', style: TextStyle(fontSize: 13.sp,color: Colors.black45)),
+          Text('• Weight: 120 kg', style: TextStyle(fontSize: 13.sp,color: Colors.black45)),
+        ],
+      ),
     );
   }
 
-  Widget _startRideButton() {
-    return ElevatedButton(
-      onPressed: isOtpVerified ? _startRide : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.greenAccent,
-        disabledBackgroundColor: Colors.grey,
-        minimumSize: const Size(double.infinity, 54),
-        foregroundColor: Colors.black,
+  /// 🔐 OTP
+  Widget _otpInput() {
+    return _card(
+      height: 130.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Enter Pickup OTP',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14.sp,
+              color: Colors.black,
+            ),
+          ),
+          8.verticalSpace,
+          TextField(
+            controller: _otpController,
+            maxLength: 4,
+            keyboardType: TextInputType.number,
+
+            // ✅ Typed OTP text color
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: Colors.black,
+              letterSpacing: 6, // OTP look 🔥 (optional)
+              fontWeight: FontWeight.w600,
+            ),
+
+            // ✅ Cursor black
+            cursorColor: Colors.black,
+
+            // ✅ Selection (blue/purple hatake black-grey)
+            selectionControls: materialTextSelectionControls,
+
+            decoration: InputDecoration(
+              counterText: '',
+              hintText: '4 Digit OTP',
+              hintStyle: TextStyle(color: Colors.black38),
+              filled: true,
+              fillColor: Colors.grey.shade100,
+
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: const BorderSide(color: Colors.black26),
+              ),
+
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide:
+                const BorderSide(color: Colors.black, width: 1.5),
+              ),
+            ),
+          ),
+        ],
       ),
-      child: const Text('START RIDE', style: TextStyle(fontSize: 18)),
+    );
+  }
+
+  /// 🚖 START RIDE
+  Widget _startRideButton() {
+    return SizedBox(
+      height: 52.h,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: isOtpVerified ? _startRide : null, // ✅ only when 4 digit OTP
+
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+          isOtpVerified ? Colors.green : Colors.grey.shade400,
+          foregroundColor:
+          isOtpVerified ? Colors.white : Colors.black54,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+        ),
+
+        child: Text(
+          'START RIDE',
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   void _verifyOtp() {
-    if (_otpController.text == correctOtp) {
-      setState(() => isOtpVerified = true);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('OTP Verified ✅')));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Invalid OTP ❌')));
-    }
+    setState(() {
+      isOtpVerified = _otpController.text == correctOtp;
+    });
   }
 
   void _startRide() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const DriverTripInProgressScreen()),
-    );
-  }
-
-  BoxDecoration _card({Color color = Colors.grey}) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.grey.shade700),
-      color: color,
+      MaterialPageRoute(
+        builder: (_) => const DriverTripInProgressScreen(),
+      ),
     );
   }
 }

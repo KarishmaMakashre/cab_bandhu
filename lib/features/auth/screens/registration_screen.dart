@@ -108,13 +108,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _userRole = role; // ✅ STORE ROLE
 
       if (role == 'rider') {
-        _primaryColor = const Color(0xFF2196F3);
+        _primaryColor = const Color(0xffF5C542);
       } else if (role == 'porter') {
-        _primaryColor = const Color(0xFF5A189A);
+        _primaryColor = const Color(0xff2dc653);
       } else if (role == 'food') {
-        _primaryColor = const Color(0xffD66D26);
+        _primaryColor = const Color(0xffFF8A65);
       } else {
-        _primaryColor = AppColors.primary;
+        _primaryColor = AppColors.foodPrimaryDark;
       }
     });
   }

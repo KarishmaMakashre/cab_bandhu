@@ -1,148 +1,158 @@
 import 'package:cab_bandhu/core/constants/color_constants.dart';
 import 'package:cab_bandhu/features/rider/six.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DriverTripInProgressScreen extends StatelessWidget {
   const DriverTripInProgressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
-        title: const Text(
-          "Trip In Progress",
-          style: TextStyle(color: Colors.black), // BLACK TEXT
-        ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
       ),
-      body: Column(
-        children: [
-          /// 🗺️ LIVE MAP
-          Expanded(
-            child: Stack(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            "Trip In Progress",
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+
+            Column(
               children: [
-                Container(
-                  color: Colors.grey.shade900, // dark map background
-                  child: const Center(
+                /// 🗺️ MAP PLACEHOLDER
+                Expanded(
+                  child: Center(
                     child: Text(
                       "LIVE NAVIGATION MAP",
                       style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black, // BLACK TEXT
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.1),
-
-                /// 🔴 TRIP STATUS CHIP
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      "TRIP ACTIVE",
-                      style: TextStyle(
-                        color: Colors.black, // BLACK TEXT
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.2),
                 ),
+
+                /// 🔽 BOTTOM PANEL (WITH BG IMAGE)
+                _BottomTripPanel(),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 🔽 BOTTOM PANEL
+class _BottomTripPanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+      child: Stack(
+        children: [
+          /// 🌄 BG IMAGE (ONLY BOTTOM)
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/backgroundImg.jpeg",
+              fit: BoxFit.cover,
             ),
           ),
 
-          /// 🔽 BOTTOM SHEET
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100, // dark bottom panel
-              borderRadius:
-              const BorderRadius.vertical(top: Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10,
-                ),
-              ],
+          /// 🌫 WHITE OVERLAY
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.90),
             ),
+          ),
+
+          /// 🧱 CONTENT
+          Padding(
+            padding: EdgeInsets.all(16.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// 👤 PASSENGER INFO
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 22,
-                      backgroundImage:
-                      NetworkImage("https://i.pravatar.cc/150?img=3"),
+                    CircleAvatar(
+                      radius: 22.r,
+                      backgroundImage: const NetworkImage(
+                        "https://i.pravatar.cc/150?img=3",
+                      ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
 
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             "Rahul Sharma",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 15.sp,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black, // BLACK TEXT
+                              color: Colors.black,
                             ),
                           ),
-                          SizedBox(height: 2),
+                          SizedBox(height: 4.h),
                           Text(
                             "⭐ 4.8 rating",
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.black54,
+                            ),
                           ),
                         ],
                       ),
                     ),
 
-                    IconButton(
-                      icon: const Icon(Icons.call, color: Colors.greenAccent),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.chat, color: Colors.blueAccent),
-                      onPressed: () {},
-                    ),
+                    Icon(Icons.call, color: Colors.green),
+                    SizedBox(width: 10.w),
+                    Icon(Icons.chat, color: Colors.blue),
                   ],
-                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
+                ),
 
-                const SizedBox(height: 14),
+                SizedBox(height: 14.h),
 
-                /// 📍 ROUTE INFO
                 _routeRow(
                   icon: Icons.location_on,
-                  color: Colors.greenAccent,
+                  color: Colors.green,
                   label: "Pickup",
                   value: "Airport Road, Bhopal",
-                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
-                const SizedBox(height: 8),
+                ),
+
+                SizedBox(height: 8.h),
+
                 _routeRow(
                   icon: Icons.flag,
-                  color: Colors.redAccent,
+                  color: Colors.red,
                   label: "Drop",
                   value: "MP Nagar Zone 2",
-                ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.2),
+                ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
-                /// 📊 LIVE STATS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
@@ -150,17 +160,16 @@ class DriverTripInProgressScreen extends StatelessWidget {
                     _TripStat(title: "Time", value: "18 min"),
                     _TripStat(title: "ETA", value: "7 min"),
                   ],
-                ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
+                ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
-                /// 🛑 END TRIP BUTTON
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.ridePrimary,
-                    minimumSize: const Size(double.infinity, 54),
+                    backgroundColor: AppColors.ridebtn,
+                    minimumSize: Size(double.infinity, 54.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                   ),
                   onPressed: () {
@@ -171,66 +180,60 @@ class DriverTripInProgressScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     "End Trip",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // BLACK BUTTON TEXT
+                      color: Colors.white,
                     ),
                   ),
-                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2),
-
-                const SizedBox(height: 8),
+                ),
               ],
             ),
-          ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.1),
+          ),
         ],
       ),
     );
   }
-
-  /// 📍 ROUTE ROW
-  Widget _routeRow({
-    required IconData icon,
-    required Color color,
-    required String label,
-    required String value,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black, // BLACK TEXT
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black, // BLACK TEXT
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
 
-/// 📊 STAT WIDGET
+/// 📍 ROUTE ROW
+Widget _routeRow({
+  required IconData icon,
+  required Color color,
+  required String label,
+  required String value,
+}) {
+  return Row(
+    children: [
+      Icon(icon, color: color, size: 18.sp),
+      SizedBox(width: 10.w),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 12.sp, color: Colors.black54),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+/// 📊 STAT
 class _TripStat extends StatelessWidget {
   final String title;
   final String value;
@@ -243,18 +246,15 @@ class _TripStat extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.black, // BLACK TEXT
-          ),
+          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6.h),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // BLACK TEXT
+            color: Colors.black,
           ),
         ),
       ],

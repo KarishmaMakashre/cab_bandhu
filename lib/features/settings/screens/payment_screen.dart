@@ -50,7 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               context,
               theme,
               icon: Icons.wallet,
-              title: 'Tryde Wallet',
+              title: 'Cab Bandhu Wallet',
               balance: '₹0.0',
               balanceColor: Colors.red,
               buttonText: 'Add Money',

@@ -19,18 +19,21 @@ class AppColors {
   static const Color ridePrimary = Color(0xfffdb50b);
   static const Color ridePrimaryLight = Color.fromARGB(255, 250, 188, 83);
   static const Color ridePrimaryDark = Color(0xFFFFA000);
+  static const Color ridebtn = Color(0xffF5C542);
     // ---------------------------
   // Food Colors
   // ---------------------------
   static const Color foodPrimary = Color(0xFFFF6B6B);
   static const Color foodPrimaryLight = Color.fromARGB(255, 255, 175, 175);
   static const Color foodPrimaryDark =Color.fromARGB(255, 255, 83, 83);
+  static const Color intercity =Color(0xffFF8A65);
   // ---------------------------
   // Logistics / Porter Colors
   // ---------------------------
   static const Color porterGreen = Color(0xFF43A047);
   static const Color porterGreenDark = Color(0xFF2E7D32);
   static const Color porterGreenLight = Color(0xFFA5D6A7);
+  static const Color porterbtn = Color(0xff43A047);
   // ---------------------------
   // Status Colors
   // ---------------------------
